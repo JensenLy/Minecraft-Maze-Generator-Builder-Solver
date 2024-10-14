@@ -168,7 +168,6 @@ void Agent::rightHandSolve() {
             keepGoing = false; 
             mc.setBlock(currPos, mcpp::Blocks::AIR);
             mc.postToChat("Solve completed"); 
-            return;
         }
 
         step++; 
