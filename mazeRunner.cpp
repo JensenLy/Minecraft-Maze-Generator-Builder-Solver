@@ -87,7 +87,9 @@ int main(void){
                 std::cout << "To Do Opt 1";
             }
             else if(userInput == "2"){
-                std::cout << "To Do Opt 2";
+                Agent* solve = new Agent(); 
+                solve->rightHandSolve(); 
+                delete solve; 
             }
             else if(userInput == "3"){
                 curState = ST_Main;

@@ -3,34 +3,51 @@
 
 #include <iostream>
 #include <mcpp/mcpp.h>
+#include <chrono>
+#include <thread> 
 
 #define MOVE_XPLUS mcpp::Coordinate(1,0,0)
 #define MOVE_XMINUS mcpp::Coordinate(-1,0,0)
 #define MOVE_ZPLUS mcpp::Coordinate(0,0,1)
 #define MOVE_ZMINUS mcpp::Coordinate(0,0,-1)
 
-enum solveAlgorithm{
-        RIGHT_HAND_FOLLOW,
-        BREATH_FIRST_SEARCH,
-};
+// enum solveAlgorithm{
+//         RIGHT_HAND_FOLLOW,
+//         BREATH_FIRST_SEARCH,
+// };
 
-enum AgentOrientation{
-    X_PLUS,
-    Z_PLUS,
-    X_MINUS,
-    Z_MINUS
-};
+// enum AgentOrientation{
+//     X_PLUS,
+//     Z_PLUS,
+//     X_MINUS,
+//     Z_MINUS
+// };
 
 class Agent
 {
 
 public:
-    Agent(mcpp::Coordinate startLoc);
+    Agent(/*mcpp::Coordinate startLoc*/);
     ~Agent();
+    void rightHandSolve(); 
+
+    bool checkNorth(mcpp::Coordinate currPos); 
+    bool checkEast(mcpp::Coordinate currPos); 
+    bool checkSouth(mcpp::Coordinate currPos); 
+    bool checkWest(mcpp::Coordinate currPos); 
+
+    void goNorth(mcpp::Coordinate &currPos); 
+    void goEast(mcpp::Coordinate &currPos); 
+    void goSouth(mcpp::Coordinate &currPos); 
+    void goWest(mcpp::Coordinate &currPos);
 
 private:
     /* data */
     mcpp::MinecraftConnection mc;
+    mcpp::Coordinate currPos; 
+    int step; 
+    int orientation; 
+    bool keepGoing; 
 
 };
 
