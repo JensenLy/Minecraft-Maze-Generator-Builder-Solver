@@ -30,16 +30,17 @@ public:
     Agent(/*mcpp::Coordinate startLoc*/);
     ~Agent();
     void rightHandSolve(); 
+    void reportStep(); 
 
-    bool checkNorth(mcpp::Coordinate currPos); 
-    bool checkEast(mcpp::Coordinate currPos); 
-    bool checkSouth(mcpp::Coordinate currPos); 
-    bool checkWest(mcpp::Coordinate currPos); 
+    bool checkNorth(); 
+    bool checkEast(); 
+    bool checkSouth(); 
+    bool checkWest(); 
 
-    void goNorth(mcpp::Coordinate &currPos); 
-    void goEast(mcpp::Coordinate &currPos); 
-    void goSouth(mcpp::Coordinate &currPos); 
-    void goWest(mcpp::Coordinate &currPos);
+    void goNorth(); 
+    void goEast(); 
+    void goSouth(); 
+    void goWest();
 
 private:
     /* data */

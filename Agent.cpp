@@ -12,14 +12,10 @@ Agent::~Agent()
 {
 }
 
-bool Agent::checkNorth(mcpp::Coordinate currPos) {
-    mcpp::Coordinate blockPos(0, 0, 0);
-
-    blockPos = currPos + MOVE_XPLUS; 
-
+bool Agent::checkNorth() {
     bool isAir = false; 
     mcpp::BlockType tempBlock; 
-    tempBlock = mc.getBlock(blockPos); 
+    tempBlock = mc.getBlock(currPos + MOVE_XPLUS); 
 
     if (tempBlock == mcpp::Blocks::AIR){
         isAir = true; 
@@ -29,14 +25,10 @@ bool Agent::checkNorth(mcpp::Coordinate currPos) {
     return isAir; 
 }
 
-bool Agent::checkEast(mcpp::Coordinate currPos) {
-    mcpp::Coordinate blockPos(0, 0, 0);
-
-    blockPos = currPos + MOVE_ZPLUS; 
-
+bool Agent::checkEast() {
     bool isAir = false; 
     mcpp::BlockType tempBlock; 
-    tempBlock = mc.getBlock(blockPos); 
+    tempBlock = mc.getBlock(currPos + MOVE_ZPLUS); 
 
     if (tempBlock == mcpp::Blocks::AIR){
         isAir = true; 
@@ -45,14 +37,10 @@ bool Agent::checkEast(mcpp::Coordinate currPos) {
     return isAir; 
 }
 
-bool Agent::checkSouth(mcpp::Coordinate currPos) {
-    mcpp::Coordinate blockPos(0, 0, 0);
-
-    blockPos = currPos + MOVE_XMINUS; 
-
+bool Agent::checkSouth() {
     bool isAir = false; 
     mcpp::BlockType tempBlock; 
-    tempBlock = mc.getBlock(blockPos); 
+    tempBlock = mc.getBlock(currPos + MOVE_XMINUS); 
 
     if (tempBlock == mcpp::Blocks::AIR){
         isAir = true; 
@@ -61,14 +49,10 @@ bool Agent::checkSouth(mcpp::Coordinate currPos) {
     return isAir; 
 }
 
-bool Agent::checkWest(mcpp::Coordinate currPos) {
-    mcpp::Coordinate blockPos(0, 0, 0);
-
-    blockPos = currPos + MOVE_ZMINUS; 
-
+bool Agent::checkWest() {
     bool isAir = false; 
     mcpp::BlockType tempBlock; 
-    tempBlock = mc.getBlock(blockPos); 
+    tempBlock = mc.getBlock(currPos + MOVE_ZMINUS); 
 
     if (tempBlock == mcpp::Blocks::AIR){
         isAir = true; 
@@ -77,28 +61,39 @@ bool Agent::checkWest(mcpp::Coordinate currPos) {
     return isAir; 
 }
 
-void Agent::goNorth(mcpp::Coordinate &currPos) { 
+void Agent::goNorth() { 
     mc.setBlock(currPos, mcpp::Blocks::AIR);
     currPos = currPos + MOVE_XPLUS; 
     mc.setBlock(currPos, mcpp::Blocks::LIME_CARPET);
 } 
 
-void Agent::goEast(mcpp::Coordinate &currPos) {
+void Agent::goEast() {
     mc.setBlock(currPos, mcpp::Blocks::AIR);
     currPos = currPos + MOVE_ZPLUS; 
     mc.setBlock(currPos, mcpp::Blocks::LIME_CARPET);
 }
 
-void Agent::goSouth(mcpp::Coordinate &currPos) {
+void Agent::goSouth() {
     mc.setBlock(currPos, mcpp::Blocks::AIR);
     currPos = currPos + MOVE_XMINUS; 
     mc.setBlock(currPos, mcpp::Blocks::LIME_CARPET);
 }
 
-void Agent::goWest(mcpp::Coordinate &currPos) {
+void Agent::goWest() {
     mc.setBlock(currPos, mcpp::Blocks::AIR);
     currPos = currPos + MOVE_ZMINUS; 
     mc.setBlock(currPos, mcpp::Blocks::LIME_CARPET);
+}
+
+void Agent::reportStep() { 
+    step++; 
+    std::string reportStep = "Step[" + std::to_string(step) + "]:"; 
+    reportStep += " (" + std::to_string(currPos.x);
+    reportStep += ", " + std::to_string(currPos.y);
+    reportStep += ", " + std::to_string(currPos.z) + ")";
+    // reportStep += " Orientation: " + std::to_string(orientation % 4); 
+    // mc.postToChat(reportStep); 
+    std::cout << reportStep << std::endl; 
 }
 
 void Agent::rightHandSolve() { 
@@ -115,69 +110,82 @@ void Agent::rightHandSolve() {
 
     while (keepGoing){
 
-        if (orientation % 4 == 0){ //Facing North
-            if (checkEast(currPos)) {
-                goEast(currPos);  
+        if (orientation % 4 == 0){ // Facing North
+            if (checkEast()) {
                 orientation += 1; // turn 90 degree clockwise
+                goEast();  
             }
-            else if(!checkEast(currPos) && !checkNorth(currPos)) { 
-                orientation += 2; // turn 180 degree clockwise
+            else if(checkNorth()) { 
+                goNorth(); // go straight
             }
-            else if(!checkEast(currPos) && checkNorth(currPos)) { 
-                goNorth(currPos); 
+            else if(checkWest()) { 
+                orientation += 3; // turn 270 degree clockwise (or 90 degree anti-clockwise)
+                goWest(); 
             }
-        }
-        else if (orientation % 4 == 1){ //Facing East
-            if (checkSouth(currPos)) {
-                goSouth(currPos); 
-                orientation += 1; 
-            }
-            else if(!checkSouth(currPos) && !checkEast(currPos)) { 
-                orientation += 2; 
-            }
-            else if(!checkSouth(currPos) && checkEast(currPos)) { 
-                goEast(currPos); 
+            else { 
+                orientation += 2; // turn 180 degree and step
+                goSouth(); 
             }
         }
-        else if (orientation % 4 == 2){ //Facing South
-            if (checkWest(currPos)) {
-                goWest(currPos); 
-                orientation += 1; 
+        else if (orientation % 4 == 1){ // Facing East
+            if (checkSouth()) {
+                orientation += 1; // turn 90 degree clockwise
+                goSouth();  
             }
-            else if(!checkWest(currPos) && !checkSouth(currPos)) { 
-                orientation += 2; 
+            else if(checkEast()) { 
+                goEast(); // go straight
             }
-            else if(!checkWest(currPos) && checkSouth(currPos)) { 
-                goSouth(currPos); 
+            else if(checkNorth()) { 
+                orientation += 3; // turn 270 degree clockwise (or 90 degree anti-clockwise)
+                goNorth(); 
+            }
+            else { 
+                orientation += 2; // turn 180 degree and step
+                goWest(); 
             }
         }
-        else if (orientation % 4 == 3){ //Facing West
-            if (checkNorth(currPos)) {
-                goNorth(currPos); 
-                orientation += 1; 
+        else if (orientation % 4 == 2){ // Facing South
+            if (checkWest()) { 
+                orientation += 1; // turn 90 degree clockwise
+                goWest();  
             }
-            else if(!checkNorth(currPos) && !checkWest(currPos)) { 
-                orientation += 2; 
+            else if(checkSouth()) { 
+                goSouth(); // go straight
             }
-            else if(!checkNorth(currPos) && checkWest(currPos)) { 
-                goWest(currPos); 
+            else if(checkEast()) { 
+                orientation += 3; // turn 270 degree clockwise (or 90 degree anti-clockwise)
+                goEast(); 
+            }
+            else { 
+                orientation += 2; // turn 180 degree and step
+                goNorth(); 
+            }
+        }
+        else if (orientation % 4 == 3){ // Facing West
+            if (checkNorth()) {
+                orientation += 1; // turn 90 degree clockwise
+                goNorth();  
+            }
+            else if(checkWest()) { 
+                goWest(); // go straight
+            }
+            else if(checkSouth()) { 
+                orientation += 3; // turn 270 degree clockwise (or 90 degree anti-clockwise)
+                goSouth(); 
+            }
+            else { 
+                orientation += 2; // turn 180 degree and step
+                goEast(); 
             }
         }
 
-        if (checkNorth(currPos) && checkEast(currPos) && checkSouth(currPos) && checkWest(currPos)) {
+        reportStep(); 
+
+        if (checkNorth() && checkEast() && checkSouth() && checkWest()) {
             keepGoing = false; 
             mc.setBlock(currPos, mcpp::Blocks::AIR);
             mc.postToChat("Solve completed"); 
         }
-
-        step++; 
-        std::string stepChat = "Step[" + std::to_string(step) + "]:"; 
-        stepChat += " (" + std::to_string(currPos.x);
-        stepChat += ", " + std::to_string(currPos.y);
-        stepChat += ", " + std::to_string(currPos.z) + ")";
-        // stepChat += " Orientation: " + std::to_string(orientation % 4); 
-        // mc.postToChat(stepChat); 
-        std::cout << stepChat << std::endl; 
         
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
     }
