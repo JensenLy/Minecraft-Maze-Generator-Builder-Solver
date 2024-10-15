@@ -31,6 +31,7 @@ public:
     ~Agent();
     void rightHandSolve(); 
     void reportStep(); 
+    bool isDone(); 
 
     bool checkNorth(); 
     bool checkEast(); 

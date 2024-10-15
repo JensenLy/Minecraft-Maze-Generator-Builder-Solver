@@ -96,6 +96,32 @@ void Agent::reportStep() {
     std::cout << reportStep << std::endl; 
 }
 
+bool Agent::isDone() { 
+    bool isDone = false; 
+
+    mcpp::BlockType checkNorthx2; 
+    mcpp::BlockType checkEastx2; 
+    mcpp::BlockType checkSouthx2; 
+    mcpp::BlockType checkWestx2; 
+
+    checkNorthx2 = mc.getBlock(currPos + MOVE_XPLUS + MOVE_XPLUS); 
+    checkEastx2 = mc.getBlock(currPos + MOVE_ZPLUS + MOVE_ZPLUS);
+    checkSouthx2 = mc.getBlock(currPos + MOVE_XMINUS + MOVE_XMINUS);
+    checkWestx2 = mc.getBlock(currPos + MOVE_ZMINUS + MOVE_ZMINUS);
+
+    if (checkNorthx2 == mcpp::Blocks::AIR && checkNorth()){
+        if (checkEastx2 == mcpp::Blocks::AIR && checkEast()){
+            if (checkSouthx2 == mcpp::Blocks::AIR && checkSouth()){
+                if (checkWestx2 == mcpp::Blocks::AIR && checkWest()){
+                    isDone = true; 
+                }
+            }
+        }
+    }
+
+    return isDone; 
+}
+
 void Agent::rightHandSolve() { 
     mcpp::MinecraftConnection mc;
     mc.doCommand("time set day");
@@ -181,7 +207,7 @@ void Agent::rightHandSolve() {
 
         reportStep(); 
 
-        if (checkNorth() && checkEast() && checkSouth() && checkWest()) {
+        if (isDone()) {
             keepGoing = false; 
             mc.setBlock(currPos, mcpp::Blocks::AIR);
             mc.postToChat("Congratulations! You are now outside the maze."); 
