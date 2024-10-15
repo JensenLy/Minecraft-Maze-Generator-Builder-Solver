@@ -98,15 +98,15 @@ void Agent::reportStep() {
 
 void Agent::rightHandSolve() { 
     mcpp::MinecraftConnection mc;
-    mc.postToChat("Finding Path");
     mc.doCommand("time set day");
 
-    std::string temp = "Original Position: "; 
-    temp += " " + std::to_string(currPos.x);
-    temp += " " + std::to_string(currPos.y);
-    temp += " " + std::to_string(currPos.z);
+    std::string origPos = "Original Position: "; 
+    origPos += " " + std::to_string(currPos.x);
+    origPos += " " + std::to_string(currPos.y);
+    origPos += " " + std::to_string(currPos.z);
+    mc.postToChat(origPos);
 
-    mc.postToChat(temp);
+    mc.postToChat("Follow the Lime Carpet");
 
     while (keepGoing){
 
@@ -184,7 +184,7 @@ void Agent::rightHandSolve() {
         if (checkNorth() && checkEast() && checkSouth() && checkWest()) {
             keepGoing = false; 
             mc.setBlock(currPos, mcpp::Blocks::AIR);
-            mc.postToChat("Solve completed"); 
+            mc.postToChat("Congratulations! You are now outside the maze."); 
         }
         
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
