@@ -123,10 +123,9 @@ bool Agent::isDone() {
 }
 
 void Agent::rightHandSolve() { 
-    mcpp::MinecraftConnection mc;
     mc.doCommand("time set day");
 
-    std::string origPos = "Original Position: "; 
+    std::string origPos = "Original Position:"; 
     origPos += " " + std::to_string(currPos.x);
     origPos += " " + std::to_string(currPos.y);
     origPos += " " + std::to_string(currPos.z);
@@ -216,3 +215,73 @@ void Agent::rightHandSolve() {
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
     }
 } 
+
+void Agent::BFSSolve(){ 
+    int i = 0; 
+    bool isVisited = false; 
+    std::vector<mcpp::Coordinate> queue; 
+    queue.push_back(currPos); 
+    std::vector<mcpp::Coordinate> visited; 
+
+    while(keepGoing) { 
+        std::cout << "Loop " << i << std::endl; 
+        isVisited = false; 
+
+        for (size_t j = 0; j < visited.size(); j++) { // Check if the current block is visited
+            if (queue.at(i) == visited[j]) { 
+                isVisited = true; 
+            }
+        }
+
+        if (!isVisited){
+            if (mc.getBlock(queue[i] + MOVE_XPLUS) == mcpp::Blocks::AIR) {
+                queue.push_back(queue[i] + MOVE_XPLUS); 
+            }
+            if (mc.getBlock(queue[i] + MOVE_ZPLUS) == mcpp::Blocks::AIR) {
+                queue.push_back(queue[i] + MOVE_ZPLUS); 
+            }
+            if (mc.getBlock(queue[i] + MOVE_XMINUS) == mcpp::Blocks::AIR) {
+                queue.push_back(queue[i] + MOVE_XMINUS); 
+            }
+            if (mc.getBlock(queue[i] + MOVE_ZMINUS) == mcpp::Blocks::AIR) {
+                queue.push_back(queue[i] + MOVE_ZMINUS); 
+            }
+
+            // mc.setBlock(queue.at(i), mcpp::Blocks::STONE);
+            visited.push_back(queue.at(i));
+
+            currPos = queue.at(i);
+            if (isDone()) { 
+                keepGoing = false; 
+                mc.postToChat("BFS Completed"); 
+                mc.setBlock(currPos, mcpp::Blocks::LIME_CARPET);
+            }
+        }
+        i++; 
+    }
+
+    mc.postToChat(std::to_string(visited.size())); 
+
+    mc.postToChat("Setting the escape path"); 
+
+    for (size_t j = visited.size() - 1; j > 0; j--) { // Trace path
+        if (currPos + MOVE_XPLUS == visited.at(j)) { 
+            currPos = currPos + MOVE_XPLUS; 
+            mc.setBlock(currPos, mcpp::Blocks::LIME_CARPET);
+        }
+        else if (currPos + MOVE_ZPLUS == visited.at(j)) { 
+            currPos = currPos + MOVE_ZPLUS; 
+            mc.setBlock(currPos, mcpp::Blocks::LIME_CARPET);
+        }
+        else if (currPos + MOVE_XMINUS == visited.at(j)) { 
+            currPos = currPos + MOVE_XMINUS; 
+            mc.setBlock(currPos, mcpp::Blocks::LIME_CARPET);
+        }
+        else if (currPos + MOVE_ZMINUS == visited.at(j)) { 
+            currPos = currPos + MOVE_ZMINUS; 
+            mc.setBlock(currPos, mcpp::Blocks::LIME_CARPET);
+        }
+    }
+
+    mc.postToChat("Follow the green line");
+}  

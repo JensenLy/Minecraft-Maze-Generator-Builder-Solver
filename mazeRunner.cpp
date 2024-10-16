@@ -84,7 +84,7 @@ int main(void){
             getline(std::cin, userInput);
 
             if(userInput == "1"){
-                std::cout << "To Do Opt 1";
+                std::cout << "To Do Opt 1"; 
             }
             else if(userInput == "2"){
                 Agent* solve = new Agent(); 
@@ -93,6 +93,11 @@ int main(void){
             }
             else if(userInput == "3"){
                 curState = ST_Main;
+            }
+            else if(userInput == "?") { // Placeholder for BFS Solving
+                Agent* solve = new Agent(); 
+                solve->BFSSolve(); 
+                delete solve;
             }
             else{
                 std::cout << "Please select menu item with numbers 1 to 3"; 

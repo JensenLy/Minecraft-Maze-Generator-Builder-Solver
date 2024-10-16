@@ -5,6 +5,7 @@
 #include <mcpp/mcpp.h>
 #include <chrono>
 #include <thread> 
+#include <vector>
 
 #define MOVE_XPLUS mcpp::Coordinate(1,0,0)
 #define MOVE_XMINUS mcpp::Coordinate(-1,0,0)
@@ -30,6 +31,7 @@ public:
     Agent(/*mcpp::Coordinate startLoc*/);
     ~Agent();
     void rightHandSolve(); 
+    void BFSSolve(); 
     void reportStep(); 
     bool isDone(); 
 
