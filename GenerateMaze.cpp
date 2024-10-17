@@ -174,3 +174,7 @@ int GenerateMaze::getMazeHeight(){
 int GenerateMaze::getMazeWidth(){
     return maze.size();
 }
+
+std::vector<std::vector<char>> GenerateMaze::getMazeVec(){
+    return maze;
+}

@@ -19,6 +19,7 @@ void UserInputMaze(int x, int y);
 void printMaze();
 int getMazeHeight();
 int getMazeWidth();
+std::vector<std::vector<char>> getMazeVec();
 
 
 private:
