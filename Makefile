@@ -5,7 +5,7 @@ all: mazeRunner
 clean:
 	rm -f mazeRunner *.o
 
-mazeRunner: Maze.o Agent.o mazeRunner.o env.o LinkedListCoordinate.o Node.o
+mazeRunner: Maze.o Agent.o mazeRunner.o env.o LinkedListCoordinate.o Node.o	GenerateMaze.o
 	g++ -Wall -Werror -std=c++17 -g -O -o $@ $^ -lmcpp
 
 %.o: %.cpp

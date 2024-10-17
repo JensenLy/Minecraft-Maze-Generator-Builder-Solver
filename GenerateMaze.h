@@ -17,6 +17,8 @@ void UserInputMaze(int x, int y);
 // int randomMove(int x, int y);
 // bool isValid(int x, int y, int dirX, int dirY);
 void printMaze();
+int getMazeHeight();
+int getMazeWidth();
 
 
 private:

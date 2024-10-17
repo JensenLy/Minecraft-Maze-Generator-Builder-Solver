@@ -9,7 +9,7 @@ void GenerateMaze::UserInputMaze(int x, int y){
 
     std::cout << "Enter the maze structure:" << std::endl;
 
-    for(int i = 0; i <= x; i++){
+    for(int i = 0; i < x; i++){
         std::getline(std::cin, userInput);
 
         for(int j = 0; j < y; j++) {
@@ -164,4 +164,13 @@ void GenerateMaze::printMaze(){
         std::cout << std::endl;
     }
 
+}
+
+int GenerateMaze::getMazeHeight(){
+    return maze[0].size();
+}
+
+
+int GenerateMaze::getMazeWidth(){
+    return maze.size();
 }
