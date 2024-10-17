@@ -99,24 +99,21 @@ void Agent::reportStep() {
 bool Agent::isDone() { 
     bool isDone = false; 
 
-    mcpp::BlockType checkNorthx2; 
-    mcpp::BlockType checkEastx2; 
-    mcpp::BlockType checkSouthx2; 
-    mcpp::BlockType checkWestx2; 
-
-    checkNorthx2 = mc.getBlock(currPos + MOVE_XPLUS + MOVE_XPLUS); 
-    checkEastx2 = mc.getBlock(currPos + MOVE_ZPLUS + MOVE_ZPLUS);
-    checkSouthx2 = mc.getBlock(currPos + MOVE_XMINUS + MOVE_XMINUS);
-    checkWestx2 = mc.getBlock(currPos + MOVE_ZMINUS + MOVE_ZMINUS);
-
-    if (checkNorthx2 == mcpp::Blocks::AIR && checkNorth()){
-        if (checkEastx2 == mcpp::Blocks::AIR && checkEast()){
-            if (checkSouthx2 == mcpp::Blocks::AIR && checkSouth()){
-                if (checkWestx2 == mcpp::Blocks::AIR && checkWest()){
-                    isDone = true; 
-                }
-            }
-        }
+    if (mc.getBlock(currPos + MOVE_XPLUS) == mcpp::Blocks::BLUE_CARPET){
+        isDone = true; 
+        // currPos = currPos + MOVE_XPLUS; 
+    }
+    if (mc.getBlock(currPos + MOVE_ZPLUS) == mcpp::Blocks::BLUE_CARPET){
+        isDone = true; 
+        // currPos = currPos + MOVE_ZPLUS; 
+    }
+    if (mc.getBlock(currPos + MOVE_XMINUS) == mcpp::Blocks::BLUE_CARPET){
+        isDone = true; 
+        // currPos = currPos + MOVE_XMINUS; 
+    }
+    if (mc.getBlock(currPos + MOVE_ZMINUS) == mcpp::Blocks::BLUE_CARPET){
+        isDone = true; 
+        // currPos = currPos + MOVE_ZMINUS; 
     }
 
     return isDone; 
@@ -133,7 +130,7 @@ void Agent::rightHandSolve() {
 
     mc.postToChat("Follow the Lime Carpet");
 
-    while (keepGoing){
+    while (keepGoing){ 
 
         if (orientation % 4 == 0){ // Facing North
             if (checkEast()) {
@@ -224,7 +221,7 @@ void Agent::BFSSolve(){
     std::vector<mcpp::Coordinate> visited; 
 
     while(keepGoing) { 
-        std::cout << "Loop " << i << std::endl; 
+        // std::cout << "Loop " << i << std::endl; 
         isVisited = false; 
 
         for (size_t j = 0; j < visited.size(); j++) { // Check if the current block is visited
@@ -247,10 +244,13 @@ void Agent::BFSSolve(){
                 queue.push_back(queue[i] + MOVE_ZMINUS); 
             }
 
-            // mc.setBlock(queue.at(i), mcpp::Blocks::STONE);
+            mc.setBlock(queue.at(i), mcpp::Blocks::LIME_CARPET);
             visited.push_back(queue.at(i));
 
+            // mc.setBlock(currPos, mcpp::Blocks::AIR); 
             currPos = queue.at(i);
+            // mc.setBlock(currPos, mcpp::Blocks::LIME_CARPET);
+
             if (isDone()) { 
                 keepGoing = false; 
                 mc.postToChat("BFS Completed"); 
@@ -260,28 +260,32 @@ void Agent::BFSSolve(){
         i++; 
     }
 
-    mc.postToChat(std::to_string(visited.size())); 
+    for (size_t j = 0; j < visited.size(); j++) {
+        mc.setBlock(visited.at(j), mcpp::Blocks::AIR);
+    }
 
     mc.postToChat("Setting the escape path"); 
 
     for (size_t j = visited.size() - 1; j > 0; j--) { // Trace path
         if (currPos + MOVE_XPLUS == visited.at(j)) { 
-            currPos = currPos + MOVE_XPLUS; 
             mc.setBlock(currPos, mcpp::Blocks::LIME_CARPET);
+            currPos = currPos + MOVE_XPLUS; 
         }
         else if (currPos + MOVE_ZPLUS == visited.at(j)) { 
-            currPos = currPos + MOVE_ZPLUS; 
             mc.setBlock(currPos, mcpp::Blocks::LIME_CARPET);
+            currPos = currPos + MOVE_ZPLUS; 
         }
         else if (currPos + MOVE_XMINUS == visited.at(j)) { 
-            currPos = currPos + MOVE_XMINUS; 
             mc.setBlock(currPos, mcpp::Blocks::LIME_CARPET);
+            currPos = currPos + MOVE_XMINUS; 
         }
         else if (currPos + MOVE_ZMINUS == visited.at(j)) { 
-            currPos = currPos + MOVE_ZMINUS; 
             mc.setBlock(currPos, mcpp::Blocks::LIME_CARPET);
+            currPos = currPos + MOVE_ZMINUS; 
         }
+        mc.setBlock(currPos, mcpp::Blocks::LIME_CARPET);
     }
+    mc.setBlock(queue.at(0), mcpp::Blocks::LIME_CARPET);
 
     mc.postToChat("Follow the green line");
 }  
