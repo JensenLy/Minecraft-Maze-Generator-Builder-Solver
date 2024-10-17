@@ -76,7 +76,24 @@ int main(void){
             }
         }
         else if(curState == ST_Creators){
-            std::cout << "To Do Build Maze";
+            std::cout << "In Minecraft, navigate to where you need the maze\nto be built in Minecraft and type - done:" << std::endl;
+            std::string input; 
+            std::cin >> input;
+            if (input == "done") {
+                std::cout << "Enter the length and width of maze:" << std::endl;
+                int length;
+                int width;
+                std::cin >> length;
+                std::cin >> width;
+            
+            }
+            else {
+                std::cout << "Invalid input, did you mean \"done\"" << std::endl; 
+            }
+
+            
+            mcpp::Coordinate playerOrg = mc.getPlayerPosition();
+            
             curState = ST_Main;
         }
         else if(curState == ST_SolveMaze){
