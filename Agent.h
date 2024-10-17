@@ -30,10 +30,6 @@ class Agent
 public:
     Agent(/*mcpp::Coordinate startLoc*/);
     ~Agent();
-    void rightHandSolve(); 
-    void BFSSolve(); 
-    void reportStep(); 
-    bool isDone(); 
 
     bool checkNorth(); 
     bool checkEast(); 
@@ -45,6 +41,12 @@ public:
     void goSouth(); 
     void goWest();
 
+    void reportStep(); 
+    bool isDone(); 
+    void rightHandSolve(); 
+    void BFSSolve(); 
+
+    
 private:
     /* data */
     mcpp::MinecraftConnection mc;
