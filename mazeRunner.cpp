@@ -96,7 +96,7 @@ int main(void){
             }
             else if(userInput == "?") { // Placeholder for BFS Solving
                 Agent* solve = new Agent(); 
-                solve->BFSSolve(); 
+                solve->bfsSolve(); 
                 delete solve;
             }
             else{
