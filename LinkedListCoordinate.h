@@ -7,6 +7,8 @@
 class LinkedListCoordinate {
     private:
         Node* head; // Pointer to the first node in the list
+        mcpp::Coordinate coordinate;
+        mcpp::BlockType blockType;
 
     public:
         mcpp::MinecraftConnection mc;

@@ -15,6 +15,7 @@ public:
     mcpp::BlockType getBlock();
     Node(mcpp::Coordinate c, mcpp::BlockType b);
     Node();
+    void setnext(Node* node);
 };
 
 #endif 

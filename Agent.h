@@ -6,6 +6,7 @@
 #include <chrono>
 #include <thread> 
 #include <vector>
+#include <algorithm>
 
 #define MOVE_XPLUS mcpp::Coordinate(1,0,0)
 #define MOVE_XMINUS mcpp::Coordinate(-1,0,0)
@@ -43,8 +44,9 @@ public:
 
     void reportStep(); 
     bool isDone(); 
+    void vecRemoveDups(std::vector<mcpp::Coordinate> &vec);
     void rightHandSolve(); 
-    void BFSSolve(); 
+    void bfsSolve(); 
 
     
 private:

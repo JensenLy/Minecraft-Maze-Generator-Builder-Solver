@@ -6,7 +6,10 @@
 
     // Function to insert a new node with a coordinate and blockType object
     void LinkedListCoordinate::insert(mcpp::Coordinate coordinate, mcpp::BlockType blockType) {
-        Node* newNode = new Node(coordinate, blockType);  // Create a new node with a Person object
+        // Node* newNode = nullptr;
+        // this->coordinate = coordinate;
+        // this->blockType = blockType;
+        Node* newNode = new Node(coordinate, blockType);  // Create a new node with a coordinate and blockType object
 
         // If the list is empty, set the new node as the head
         if (head == nullptr) {
@@ -18,7 +21,10 @@
             while (temp->getnext() != nullptr) {
                 temp = temp->getnext();
             }
-                newNode = temp->getnext();
+
+            temp->setnext(newNode);
+                // temp->getnext() = newNode;
+                // newNode = temp->getnext();
                  // Link the last node to the new node
         }
     }

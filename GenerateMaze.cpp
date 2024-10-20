@@ -1,25 +1,136 @@
 #include "GenerateMaze.h"
+#include "Maze.h"
+#include "env.h"
 
-GenerateMaze::GenerateMaze(int x, int y){
-    maze.resize(x, std::vector<char>(y,'X'));
-}
+// GenerateMaze::GenerateMaze(int x, int y){
+//     maze.resize(x, std::vector<char>(y,'X'));
+// }
+// void ReadEnvSize(int &envLength, int &envWidth);
+// void readEnvStdin(char **EnvStruct, int length, int width);
 
-void GenerateMaze::UserInputMaze(int x, int y){
-    std::string userInput;
 
-    std::cout << "Enter the maze structure:" << std::endl;
-
-    for(int i = 0; i < x; i++){
-        std::getline(std::cin, userInput);
-
-        for(int j = 0; j < y; j++) {
-            maze[i][j] = userInput[j];
-        }
+GenerateMaze::GenerateMaze(int x, int y) : width(x), height(y) {
+    // Dynamically allocate a 2D array (double pointer)
+    maze = new char*[x];  // Allocate rows
+    for (int i = 0; i < x; i++) {
+        maze[i] = new char[y];   // Allocate columns for each row
     }
 
-    std::cout << "Maze read successfully";
+    // // Initialize maze with 'X' (walls)
+    // for (int i = 0; i < x; ++i) {
+    //     for (int j = 0; j < y; ++j) {
+    //         maze[i][j] = 'X';
+    //     }
+    // }
+}
+
+// GenerateMaze::~GenerateMaze() {
+//     for (int i = 0; i < width; ++i) {
+//         delete[] maze[i];
+//     }
+//     delete[] maze;
+// }
+
+void GenerateMaze::UserInputMaze(int x, int y) {
+    char readChar;
+    int envLength = x;
+    int envWidth = y;
+    // maze = new char*[x];  // Allocate rows
+    // for (int i = 0; i < x; i++) {
+    //     maze[i] = new char[y];   // Allocate columns for each row
+    // }
+    // ReadEnvSize(envLength, envWidth);
+    Env test_env(envLength, envWidth);
+
+    std::cout << "Enter the maze structure (one row at a time):" << std::endl;
+    
+    for (int row = 0; row < envLength; row++) {
+    for (int col = 0; col < envWidth; col++) {
+      std::cin >> readChar;
+    //   this->maze[row][col] = readChar;
+      test_env.setEnvElement(row, col, readChar);
+      maze[row][col] = readChar;
+    }
+  }
+
+
+
+    // // Ignore any leftover characters from the input buffer
+    // std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+    // for (int i = 0; i < x; ++i) {
+    //     // std::getline(std::cin, userInput);
+    //     for (int j = 0; j < y; ++j) {
+    //         std::cin >> userInput;
+    //         maze[i][j] = userInput;
+    //     }
+    // }
+
+    std::cout << "Maze read successfully." << std::endl;
+
+    for (int row = 0; row < envLength; row++) {
+        for (int col = 0; col < envWidth; col++) {
+            std::cout << test_env.getEnvElement(row, col);
+        }
+        std::cout << std::endl;
+    }
     
 }
+
+// void GenerateMaze::printMaze() {
+//     for (int i = 0; i < width; ++i) {
+//         for (int j = 0; j < height; ++j) {
+//             std::cout << test_env.getEnvElement(i, j);
+//         }
+//         std::cout << std::endl;
+//     }
+// }
+
+int GenerateMaze::getMazeWidth() {
+    return width;
+}
+
+int GenerateMaze::getMazeHeight() {
+    return height;
+}
+
+char** GenerateMaze::getMaze() const{
+    return this->maze;
+}
+
+
+
+// void ReadEnvSize(int& envLength, int& envWidth){
+//   std::cin >> envLength;
+//   std::cin >> envWidth;
+// }
+
+// void readEnvStdin(char **EnvStruct, int length, int width) {
+//   char readChar;
+//   for (int row = 0; row < length; row++) {
+//     for (int col = 0; col < width; col++) {
+//       std::cin >> readChar;
+//       EnvStruct[row][col] = readChar;
+//     }
+//   }
+// }
+
+// void GenerateMaze::UserInputMaze(int x, int y){
+//     std::string userInput;
+
+//     std::cout << "Enter the maze structure:" << std::endl;
+
+//     for(int i = 0; i < x; i++){
+//         std::getline(std::cin, userInput);
+
+//         for(int j = 0; j < y; j++) {
+//             maze[i][j] = userInput[j];
+//         }
+//     }
+
+//     std::cout << "Maze read successfully" << std::endl;
+    
+// }
 
 // void GenerateMaze::GenerateRandomMaze(int x, int y){
 
@@ -153,27 +264,33 @@ void GenerateMaze::UserInputMaze(int x, int y){
 
 // }
 
-void GenerateMaze::printMaze(){
-    int x = maze.size();
-    int y = maze[1].size();
+// void GenerateMaze::printMaze(){
+//     int x = maze.size();
+//     int y = maze[1].size();
 
-    for(int i = 0; i < x; i++){
-        for(int j = 0; j < y; j++){
-            std::cout << maze[i][j];
-        }
-        std::cout << std::endl;
-    }
+//     for(int i = 0; i < x; i++){
+//         for(int j = 0; j < y; j++){
+//             std::cout << maze[i][j];
+//         }
+//         std::cout << std::endl;
+//     }
 
-}
+// }
 
-int GenerateMaze::getMazeHeight(){
-    return maze[0].size();
-}
+// int GenerateMaze::getMazeHeight(){
+//     return maze[0].size();
+// }
 
 
-int GenerateMaze::getMazeWidth(){
-    return maze.size();
-}
+// int GenerateMaze::getMazeWidth(){
+//     return maze.size();
+// }
+
+// std::vector<std::vector<char>> GenerateMaze::getMaze() const {
+//     return this->maze;
+// }
+
+
 
 std::vector<std::vector<char>> GenerateMaze::getMazeVec(){
     return maze;

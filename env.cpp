@@ -25,7 +25,7 @@ Env::~Env() {
 int Env::getLength() { return this->length; }
 int Env::getWidth() { return this->width; }
 void Env::setEnvElement(int row, int col, char c) {
-  this->envStructure[row][col] = c;
+  this->envStructure[row][col] = c; 
 }
 char Env::getEnvElement(int row, int col) {
   return this->envStructure[row][col];

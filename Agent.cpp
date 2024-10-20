@@ -119,6 +119,10 @@ bool Agent::isDone() {
     return isDone; 
 }
 
+void Agent::vecRemoveDups(std::vector<mcpp::Coordinate> &vec){
+    vec.erase(std::unique(vec.begin(), vec.end()),vec.end());
+}
+
 void Agent::rightHandSolve() { 
     mc.doCommand("time set day");
 
@@ -206,19 +210,20 @@ void Agent::rightHandSolve() {
         if (isDone()) {
             keepGoing = false; 
             mc.setBlock(currPos, mcpp::Blocks::AIR);
-            mc.postToChat("Congratulations! You are now outside the maze."); 
+            mc.postToChat("Congratulations! You reached the exit!"); 
         }
         
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
     }
 } 
 
-void Agent::BFSSolve(){ 
+void Agent::bfsSolve(){ 
     int i = 0; 
     bool isVisited = false; 
     std::vector<mcpp::Coordinate> queue; 
     queue.push_back(currPos); 
     std::vector<mcpp::Coordinate> visited; 
+    std::vector<mcpp::Coordinate> path; 
 
     while(keepGoing) { 
         // std::cout << "Loop " << i << std::endl; 
@@ -244,17 +249,15 @@ void Agent::BFSSolve(){
                 queue.push_back(queue[i] + MOVE_ZMINUS); 
             }
 
-            mc.setBlock(queue.at(i), mcpp::Blocks::LIME_CARPET);
+            mc.setBlock(queue.at(i), mcpp::Blocks::WHITE_CARPET);
             visited.push_back(queue.at(i));
 
-            // mc.setBlock(currPos, mcpp::Blocks::AIR); 
             currPos = queue.at(i);
-            // mc.setBlock(currPos, mcpp::Blocks::LIME_CARPET);
 
             if (isDone()) { 
                 keepGoing = false; 
                 mc.postToChat("BFS Completed"); 
-                mc.setBlock(currPos, mcpp::Blocks::LIME_CARPET);
+                mc.setBlock(currPos, mcpp::Blocks:: WHITE_CARPET);
             }
         }
         i++; 
@@ -266,26 +269,35 @@ void Agent::BFSSolve(){
 
     mc.postToChat("Setting the escape path"); 
 
-    for (size_t j = visited.size() - 1; j > 0; j--) { // Trace path
-        if (currPos + MOVE_XPLUS == visited.at(j)) { 
-            mc.setBlock(currPos, mcpp::Blocks::LIME_CARPET);
+    for (size_t j = visited.size(); j > 0; j--) { // Trace path
+        if (currPos + MOVE_XPLUS == visited.at(j - 1)) { 
+            path.push_back(currPos);
             currPos = currPos + MOVE_XPLUS; 
         }
-        else if (currPos + MOVE_ZPLUS == visited.at(j)) { 
-            mc.setBlock(currPos, mcpp::Blocks::LIME_CARPET);
+        else if (currPos + MOVE_ZPLUS == visited.at(j - 1)) { 
+            path.push_back(currPos);
             currPos = currPos + MOVE_ZPLUS; 
         }
-        else if (currPos + MOVE_XMINUS == visited.at(j)) { 
-            mc.setBlock(currPos, mcpp::Blocks::LIME_CARPET);
+        else if (currPos + MOVE_XMINUS == visited.at(j - 1)) { 
+            path.push_back(currPos);
             currPos = currPos + MOVE_XMINUS; 
         }
-        else if (currPos + MOVE_ZMINUS == visited.at(j)) { 
-            mc.setBlock(currPos, mcpp::Blocks::LIME_CARPET);
+        else if (currPos + MOVE_ZMINUS == visited.at(j - 1)) { 
+            path.push_back(currPos);
             currPos = currPos + MOVE_ZMINUS; 
         }
-        mc.setBlock(currPos, mcpp::Blocks::LIME_CARPET);
+        path.push_back(currPos);
     }
-    mc.setBlock(queue.at(0), mcpp::Blocks::LIME_CARPET);
 
-    mc.postToChat("Follow the green line");
+    vecRemoveDups(path); 
+    mc.postToChat("Follow the lime carpet");
+    for (size_t j = path.size(); j > 0; j--){ 
+        mc.setBlock(currPos, mcpp::Blocks::AIR);
+        currPos = path.at(j - 1); 
+        mc.setBlock(currPos, mcpp::Blocks::LIME_CARPET);
+        reportStep();
+        std::this_thread::sleep_for(std::chrono::milliseconds(650));
+    }
+    mc.setBlock(currPos, mcpp::Blocks::AIR);
+    mc.postToChat("Congratulations! You reached the exit!"); 
 }  
