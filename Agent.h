@@ -45,7 +45,7 @@ public:
     void reportStep(); 
     bool isDone(); 
     void vecRemoveDups(std::vector<mcpp::Coordinate> &vec);
-    void Agent::manualSolve(mcpp::Coordinate basePoint, int row, int col, char** maze);
+    void manualSolve(mcpp::Coordinate basePoint, int row, int col, char** maze);
     void rightHandSolve(); 
     void bfsSolve(); 
 
