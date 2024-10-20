@@ -123,6 +123,22 @@ void Agent::vecRemoveDups(std::vector<mcpp::Coordinate> &vec){
     vec.erase(std::unique(vec.begin(), vec.end()),vec.end());
 }
 
+void Agent::manualSolve(mcpp::Coordinate playerOrg, int row, int col, char** maze){ 
+    //TO DO: implement the manual solve
+    int rowRand = 0; 
+    int colRand = 0; 
+    while (keepGoing){ 
+        rowRand = rand() % row; 
+        colRand = rand() % col; 
+
+        if (maze[rowRand][colRand] == '.') { 
+            keepGoing = false; 
+            currPos = playerOrg + mcpp::Coordinate (rowRand, 0 , colRand);
+            mc.setPlayerTilePosition(currPos); 
+        }
+    }
+}
+
 void Agent::rightHandSolve() { 
     mc.doCommand("time set day");
 
