@@ -5,6 +5,7 @@
 #include "menuUtils.h"
 #include "Maze.h"
 #include "Agent.h"
+#include "GenerateMaze.h"
 
 #define NORMAL_MODE 0
 #define TESTING_MODE 1
@@ -29,6 +30,12 @@ int main(void){
 
     States curState = ST_Main;
     std::string userInput;
+
+    int userX;
+    int userY;
+    bool correctInput = false;
+    mcpp::Coordinate playerOrg;
+    GenerateMaze userMaze = GenerateMaze(userX, userY);
 
     //State machine for menu        
     while (curState != ST_Exit)
@@ -62,7 +69,36 @@ int main(void){
             getline(std::cin, userInput);
             
             if(userInput == "1"){
-                std::cout << "To Do Opt 1";
+
+                std::cout << "In Minecraft, navigate to where you need the maze\nto be built in Minecraft and type - done:" << std::endl;
+
+                std::string input; 
+                std::cin >> input;
+                if (input == "done"){
+
+                    playerOrg = mc.getPlayerPosition();
+
+                    std::cout << "Enter the length and width of maze" << std::endl;
+
+                    while(!correctInput){
+                        std::cin >> userX >> userY;
+                
+                        if(userX%2 == 0 || userY%2 == 0){
+                            std::cout << "Please enter odd values for the length and width of maze" << std::endl;
+                        }
+                        else{
+                            correctInput = true;
+                        }
+                }
+
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+                userMaze = GenerateMaze(userX, userY);
+                userMaze.UserInputMaze(userX, userY);
+                // userMaze.printMaze();
+                
+
+                }
 
             }
             else if(userInput == "2"){
@@ -76,7 +112,39 @@ int main(void){
             }
         }
         else if(curState == ST_Creators){
-            std::cout << "To Do Build Maze";
+            std::cout << "Building maze" << std::endl;
+            // char** test;
+            // test = new char*[userX];  // Allocate rows
+            // for (int i = 0; i < userX; i++) {
+            //     test[i] = new char[userY];   // Allocate columns for each row
+            // }
+
+            // test = userMaze.getMaze();
+            // for (int row = 0; row < userX; row++) {
+            //     for (int col = 0; col < userY; col++) {
+            //         std::cout << test[row][col];
+            //     }
+            //     std::cout << std::endl;
+            // }
+
+            Maze(playerOrg, userX, userY, correctInput, userMaze.getMaze());
+            // std::string input; 
+            // std::cin >> input;
+            // if (input == "done") {
+            //     std::cout << "Enter the length and width of maze:" << std::endl;
+            //     int length;
+            //     int width;
+            //     std::cin >> length;
+            //     std::cin >> width;
+            
+            // }
+            // else {
+            //     std::cout << "Invalid input, did you mean \"done\"" << std::endl; 
+            // }
+
+            
+            // mcpp::Coordinate playerOrg = mc.getPlayerPosition();
+            
             curState = ST_Main;
         }
         else if(curState == ST_SolveMaze){
@@ -104,12 +172,9 @@ int main(void){
             }
         }
 
-        
-
     }
 
     printExitMassage();
-
 
     return EXIT_SUCCESS;
 
