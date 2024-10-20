@@ -1,8 +1,12 @@
 #include "Node.h"
 
+// Node::Node() : next(nullptr) {}  // Always initialize next to nullptr
+
 Node::Node(mcpp::Coordinate c, mcpp::BlockType b) {
     this->coordinate = c;
     this->blockType = b;
+    next = nullptr;
+
 }
 
 Node* Node::getnext() {
@@ -10,11 +14,15 @@ Node* Node::getnext() {
 }
 
 mcpp::Coordinate Node::getCoord() {
-    return this->coordinate;
+    return coordinate;
 }
 
 mcpp::BlockType Node::getBlock() {
-    return this->blockType;
+    return blockType;
+}
+
+void Node::setnext(Node* node) {
+    this->next = node;
 }
 
 
