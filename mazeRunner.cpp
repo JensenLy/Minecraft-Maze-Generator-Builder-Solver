@@ -175,6 +175,7 @@ int main(void){
     }
 
     printExitMassage();
+    
 
     return EXIT_SUCCESS;
 
