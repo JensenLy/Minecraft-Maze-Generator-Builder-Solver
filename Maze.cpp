@@ -4,12 +4,11 @@
 #include <random>
 #include <mcpp/mcpp.h>
 // #include "GenerateMaze.h"
-void ReadEnvSize(int &envLength, int &envWidth);
-void readEnvStdin(char **EnvStruct, int length, int width);
-void ReadBuildLocation(int &build_x, int &build_y, int &build_z);
-
 
 // Maze::Maze(char**& maze) : maze(maze) {}
+mcpp::MinecraftConnection mc;
+LinkedListCoordinate list;
+
 
 Maze::Maze(mcpp::Coordinate basePoint, unsigned int xlen, 
                                     unsigned int zlen,
@@ -21,7 +20,7 @@ Maze::Maze(mcpp::Coordinate basePoint, unsigned int xlen,
   this->mode = mode;
   
 
-    mcpp::MinecraftConnection mc;
+    
     mc.doCommand("time set day");
     // this->maze = new char*[xlen];
     // for (unsigned int i = 0; i < xlen; i++) {
@@ -106,8 +105,6 @@ Maze::Maze(mcpp::Coordinate basePoint, unsigned int xlen,
         }
     }
 
-    LinkedListCoordinate list;
-
     for (unsigned int row = 0; row < xlen; row++) {
         for (unsigned int col = 0; col < zlen; col++) {
           for (int height = 0; height < 3; height++) {
@@ -135,25 +132,32 @@ Maze::Maze(mcpp::Coordinate basePoint, unsigned int xlen,
           for (int height = 0; height < 3; height++) {
               mc.setBlock(startCoord+mcpp::Coordinate(row, height, col), mcpp::Blocks::AIR);
               if (test_env.getEnvElement(row, col) == 'x'){
-              mc.setBlock(startCoord+mcpp::Coordinate(row, height, col), mcpp::Blocks::ACACIA_WOOD_PLANK);
+                mc.setBlock(startCoord+mcpp::Coordinate(row, height, col), mcpp::Blocks::ACACIA_WOOD_PLANK);
               }
+              else {
+                if (row == 0 || row == (xlen - 1) || col == 0 || col == (zlen - 1)) {
+                  mc.setBlock(startCoord+mcpp::Coordinate(row, 0, col), mcpp::Blocks::BLUE_CARPET);
+                }
+              }
+              
           }
         }
     }
-
-    for (unsigned int row = 0; row < xlen; row++) {
-        for (unsigned int col = 0; col < zlen; col++) {
-          for (int height = 0; height < 3; height++) {
-              if (mc.getBlock(startCoord+mcpp::Coordinate(row, height, col)) != mcpp::Blocks::AIR) {
-              mc.setBlock(startCoord+mcpp::Coordinate(row, height, col), mcpp::Blocks::AIR);
-              }
-          }
-        }
-    }
-
-    list.placeback();
 
 }
+
+// void Maze::exitCleanUp() {
+//   for (unsigned int row = 0; row < xlen; row++) {
+//       for (unsigned int col = 0; col < zlen; col++) {
+//         for (int height = 0; height < 3; height++) {
+//             if (mc.getBlock(startCoord+mcpp::Coordinate(row, height, col)) != mcpp::Blocks::AIR) {
+//               mc.setBlock(startCoord+mcpp::Coordinate(row, height, col), mcpp::Blocks::AIR);
+//             }
+//         }
+//       }
+//   }
+//   list.placeback();
+// }
 
 
 Maze::~Maze()
@@ -164,13 +168,13 @@ Maze::~Maze()
   delete[] maze;
 }
 
-void ReadEnvSize(int& envLength, int& envWidth){
+void Maze::ReadEnvSize(int& envLength, int& envWidth){
   std::cout << "Enter the size of the rectangular environment (L, W): " << std::endl;
   std::cin >> envLength;
   std::cin >> envWidth;
 }
 
-void readEnvStdin(char **EnvStruct, int length, int width) {
+void Maze::readEnvStdin(char **EnvStruct, int length, int width) {
   char readChar;
   for (int row = 0; row < length; row++) {
     for (int col = 0; col < width; col++) {
@@ -180,7 +184,7 @@ void readEnvStdin(char **EnvStruct, int length, int width) {
   }
 }
 
-void ReadBuildLocation(int &build_x, int &build_y, int &build_z) {
+void Maze::ReadBuildLocation(int &build_x, int &build_y, int &build_z) {
   std::cin >> build_x;
   std::cin >> build_y;
   std::cin >> build_z;
