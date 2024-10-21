@@ -125,6 +125,7 @@ void Agent::vecRemoveDups(std::vector<mcpp::Coordinate> &vec){
 
 void Agent::manualSolve(mcpp::Coordinate playerOrg, int row, int col, char** maze){ 
     //TO DO: implement the manual solve
+    srand(rand()); 
     int rowRand = 0; 
     int colRand = 0; 
     while (keepGoing){ 
