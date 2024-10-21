@@ -131,7 +131,7 @@ Maze::Maze(mcpp::Coordinate basePoint, unsigned int xlen,
         for (unsigned int col = 0; col < xlen; col++) {
           for (int height = 0; height < 3; height++) {
               mc.setBlock(startCoord+mcpp::Coordinate(col, height, row), mcpp::Blocks::AIR);
-              if (test_env.getEnvElement(row, col) == 'x'){
+              if (test_env.getEnvElement(row, col) == 'x' || test_env.getEnvElement(row, col) == 'X'){
                 mc.setBlock(startCoord+mcpp::Coordinate(col, height, row), mcpp::Blocks::ACACIA_WOOD_PLANK);
               }
               else {
