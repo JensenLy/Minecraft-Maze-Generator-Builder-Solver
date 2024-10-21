@@ -11,9 +11,9 @@
 
 GenerateMaze::GenerateMaze(int x, int y) : width(x), height(y) {
     // Dynamically allocate a 2D array (double pointer)
-    maze = new char*[x];  // Allocate rows
-    for (int i = 0; i < x; i++) {
-        maze[i] = new char[y];   // Allocate columns for each row
+    maze = new char*[y];  // Allocate rows
+    for (int i = 0; i < y; i++) {
+        maze[i] = new char[x];   // Allocate columns for each row
     }
 
     // // Initialize maze with 'X' (walls)
@@ -33,8 +33,8 @@ GenerateMaze::GenerateMaze(int x, int y) : width(x), height(y) {
 
 void GenerateMaze::UserInputMaze(int x, int y) {
     char readChar;
-    int envLength = x;
-    int envWidth = y;
+    int envLength = y;
+    int envWidth = x;
     // maze = new char*[x];  // Allocate rows
     // for (int i = 0; i < x; i++) {
     //     maze[i] = new char[y];   // Allocate columns for each row
