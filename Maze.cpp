@@ -29,10 +29,10 @@ Maze::Maze(mcpp::Coordinate basePoint, unsigned int xlen,
 
     // this->maze = maze;
 
-    this->maze = new char*[xlen];
-    for (unsigned int i = 0; i < xlen; ++i) {
-        this->maze[i] = new char[zlen];
-        for (unsigned int j = 0; j < zlen; ++j) {
+    this->maze = new char*[zlen];
+    for (unsigned int i = 0; i < zlen; ++i) {
+        this->maze[i] = new char[xlen];
+        for (unsigned int j = 0; j < xlen; ++j) {
             this->maze[i][j] = sourceMaze[i][j];  // Copying each element
         }
     }
@@ -53,25 +53,25 @@ Maze::Maze(mcpp::Coordinate basePoint, unsigned int xlen,
     // int envLength = 0;
     // int envWidth = 0;
     // ReadEnvSize(envLength, envWidth);
-    Env test_env(xlen, zlen);
+    Env test_env(zlen, xlen);
     // std::cout << "Length: " << test_env.getLength() << ", Width: " << test_env.getWidth() << std::endl;
     char readChar;
     //GenerateMaze Maze = getMaze();
 
-    for (unsigned int row = 0; row < xlen; row++) {
-        for (unsigned int col = 0; col < zlen; col++) {
+    for (unsigned int row = 0; row < zlen; row++) {
+        for (unsigned int col = 0; col < xlen; col++) {
         // std::cin >> readChar;
         readChar = maze[row][col];
         test_env.setEnvElement(row, col, readChar);
         }
     }
 
-    for(unsigned int i = 0; i < xlen; i++){
-        for(unsigned int j = 0; j < zlen; j++){
-            std::cout << test_env.getEnvElement(i, j);
-        }
-        std::cout << std::endl;
-    }
+    // for(unsigned int i = 0; i < zlen; i++){
+    //     for(unsigned int j = 0; j < xlen; j++){
+    //         std::cout << test_env.getEnvElement(i, j);
+    //     }
+    //     std::cout << std::endl;
+    // }
 
     int build_x = 0;
     int build_y = 0;
@@ -89,9 +89,9 @@ Maze::Maze(mcpp::Coordinate basePoint, unsigned int xlen,
     int counter;
 
     // Goes through row by row
-    for (unsigned int row = 0; row < xlen; row++) {
+    for (unsigned int row = 0; row < zlen; row++) {
         // Goes through column by column
-        for (unsigned int col = 0; col < zlen; col++) {
+        for (unsigned int col = 0; col < xlen; col++) {
 
         counter = build_y - mc.getHeight(build_x + row, build_z + col);
         if (counter > 0) {
@@ -105,8 +105,8 @@ Maze::Maze(mcpp::Coordinate basePoint, unsigned int xlen,
         }
     }
 
-    for (unsigned int row = 0; row < xlen; row++) {
-        for (unsigned int col = 0; col < zlen; col++) {
+    for (unsigned int row = 0; row < zlen; row++) {
+        for (unsigned int col = 0; col < xlen; col++) {
           for (int height = 0; height < 3; height++) {
             // std::cout << "Testing" << std::endl;
               if (mc.getBlock(startCoord+mcpp::Coordinate(row, height, col)) != mcpp::Blocks::AIR) {
@@ -127,22 +127,38 @@ Maze::Maze(mcpp::Coordinate basePoint, unsigned int xlen,
     }
 
 
-    for (unsigned int row = 0; row < xlen; row++) {
-        for (unsigned int col = 0; col < zlen; col++) {
+    for (unsigned int row = 0; row < zlen; row++) {
+        for (unsigned int col = 0; col < xlen; col++) {
           for (int height = 0; height < 3; height++) {
-              mc.setBlock(startCoord+mcpp::Coordinate(row, height, col), mcpp::Blocks::AIR);
+              mc.setBlock(startCoord+mcpp::Coordinate(col, height, row), mcpp::Blocks::AIR);
               if (test_env.getEnvElement(row, col) == 'x'){
-                mc.setBlock(startCoord+mcpp::Coordinate(row, height, col), mcpp::Blocks::ACACIA_WOOD_PLANK);
+                mc.setBlock(startCoord+mcpp::Coordinate(col, height, row), mcpp::Blocks::ACACIA_WOOD_PLANK);
               }
               else {
-                if (row == 0 || row == (xlen - 1) || col == 0 || col == (zlen - 1)) {
-                  mc.setBlock(startCoord+mcpp::Coordinate(row, 0, col), mcpp::Blocks::BLUE_CARPET);
+                if (row == 0 || row == (zlen - 1) || col == 0 || col == (xlen - 1)) {
+                  mc.setBlock(startCoord+mcpp::Coordinate(col, 0, row), mcpp::Blocks::BLUE_CARPET);
                 }
               }
               
           }
         }
     }
+    // for (unsigned int row = 0; row < zlen; row++) {
+    //     for (unsigned int col = 0; col < xlen; col++) {
+    //       for (int height = 0; height < 3; height++) {
+    //           mc.setBlock(startCoord+mcpp::Coordinate(col, height, row), mcpp::Blocks::AIR);
+    //           if (test_env.getEnvElement(row, col) == 'x'){
+    //             mc.setBlock(startCoord+mcpp::Coordinate(col, height, row), mcpp::Blocks::ACACIA_WOOD_PLANK);
+    //           }
+    //           else {
+    //             if (row == 0 || row == (zlen - 1) || col == 0 || col == (xlen - 1)) {
+    //               mc.setBlock(startCoord+mcpp::Coordinate(col, 0, row), mcpp::Blocks::BLUE_CARPET);
+    //             }
+    //           }
+              
+    //       }
+    //     }
+    // }
 
 }
 
@@ -162,7 +178,7 @@ Maze::Maze(mcpp::Coordinate basePoint, unsigned int xlen,
 
 Maze::~Maze()
 {
-  for (unsigned int i = 0; i < xlen; i++) {
+  for (unsigned int i = 0; i < zlen; i++) {
     delete[] maze[i];
   }
   delete[] maze;
