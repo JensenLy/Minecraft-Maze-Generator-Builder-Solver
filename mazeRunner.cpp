@@ -175,6 +175,9 @@ int main(void){
 
             if(userInput == "1"){
                 std::cout << "To Do Opt 1"; 
+                Agent* solve = new Agent(); 
+                solve->manualSolve(playerOrg, userMaze.getMazeHeight(), userMaze.getMazeWidth(), userMaze.getMaze()); 
+                delete solve; 
             }
             else if(userInput == "2"){
                 Agent* solve = new Agent(); 
