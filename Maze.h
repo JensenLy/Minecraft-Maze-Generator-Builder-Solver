@@ -5,11 +5,13 @@
 #include <mcpp/mcpp.h>
 #include <chrono>
 #include <thread>
+#include "LinkedListCoordinate.h"
 
 class Maze
 {
 
 public:
+    Maze();
     Maze(mcpp::Coordinate basePoint, unsigned int xlen, 
                                         unsigned int zlen,
                                         bool mode, char** sourceMaze);
@@ -27,6 +29,12 @@ private:
     unsigned int xlen;
     unsigned int zlen;
     bool mode;
+    mcpp::MinecraftConnection mc;
+    LinkedListCoordinate list;
+    int build_x;
+    int build_y;
+    int build_z;
+
 
 };
 

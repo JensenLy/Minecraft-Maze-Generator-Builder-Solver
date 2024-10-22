@@ -1,13 +1,10 @@
 #include "Maze.h"
 #include "env.h"
-#include "LinkedListCoordinate.h"
 #include <random>
 #include <mcpp/mcpp.h>
 // #include "GenerateMaze.h"
 
-// Maze::Maze(char**& maze) : maze(maze) {}
-mcpp::MinecraftConnection mc;
-LinkedListCoordinate list;
+Maze::Maze() {}
 
 
 Maze::Maze(mcpp::Coordinate basePoint, unsigned int xlen, 
@@ -72,10 +69,6 @@ Maze::Maze(mcpp::Coordinate basePoint, unsigned int xlen,
     //     }
     //     std::cout << std::endl;
     // }
-
-    int build_x = 0;
-    int build_y = 0;
-    int build_z = 0;
     
     mcpp::Coordinate playerOrg = basePoint;
     build_x = playerOrg.x;
@@ -93,15 +86,15 @@ Maze::Maze(mcpp::Coordinate basePoint, unsigned int xlen,
         // Goes through column by column
         for (unsigned int col = 0; col < xlen; col++) {
 
-        counter = build_y - mc.getHeight(build_x + row, build_z + col);
-        if (counter > 0) {
-            tempy = mc.getHeight(build_x + row, build_z + col) - build_y;
-            block = mc.getBlock(startCoord+mcpp::Coordinate(row, tempy, col));
-            for (int i = 0; i < counter; i++) {
-            mc.setBlock(startCoord+mcpp::Coordinate(row, tempy, col), block);
-            tempy++;
-            }
-        }
+          counter = build_y - mc.getHeight(build_x + row, build_z + col);
+          if (counter > 0) {
+              tempy = mc.getHeight(build_x + row, build_z + col) - build_y;
+              block = mc.getBlock(startCoord+mcpp::Coordinate(row, tempy, col));
+              for (int i = 0; i < counter; i++) {
+                mc.setBlock(startCoord+mcpp::Coordinate(row, tempy, col), block);
+                tempy++;
+              }
+          }
         }
     }
 
@@ -180,6 +173,7 @@ Maze::Maze(mcpp::Coordinate basePoint, unsigned int xlen,
 }
 
 // void Maze::exitCleanUp() {
+//   mcpp::Coordinate startCoord(build_x, build_y, build_z);
 //   for (unsigned int row = 0; row < xlen; row++) {
 //       for (unsigned int col = 0; col < zlen; col++) {
 //         for (int height = 0; height < 3; height++) {
@@ -199,6 +193,19 @@ Maze::~Maze()
     delete[] maze[i];
   }
   delete[] maze;
+
+  mcpp::Coordinate startCoord(build_x, build_y, build_z);
+  for (unsigned int row = 0; row < xlen; row++) {
+      for (unsigned int col = 0; col < zlen; col++) {
+        for (int height = 0; height < 3; height++) {
+            if (mc.getBlock(startCoord+mcpp::Coordinate(row, height, col)) != mcpp::Blocks::AIR) {
+              mc.setBlock(startCoord+mcpp::Coordinate(row, height, col), mcpp::Blocks::AIR);
+            }
+        }
+      }
+  }
+  list.placeback();
+
 }
 
 void Maze::ReadEnvSize(int& envLength, int& envWidth){

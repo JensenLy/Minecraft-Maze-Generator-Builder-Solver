@@ -30,12 +30,14 @@ int main(void){
 
     States curState = ST_Main;
     std::string userInput;
-
+    // maze* =nullptr
+    Maze *m = new Maze();
     int userX;
     int userY;
     bool correctInput = false;
     mcpp::Coordinate playerOrg;
     GenerateMaze userMaze;
+    //Maze
 
     //State machine for menu        
     while (curState != ST_Exit)
@@ -135,37 +137,8 @@ int main(void){
         }
         else if(curState == ST_Creators){
             std::cout << "Building maze" << std::endl;
-            // char** test;
-            // test = new char*[userX];  // Allocate rows
-            // for (int i = 0; i < userX; i++) {
-            //     test[i] = new char[userY];   // Allocate columns for each row
-            // }
 
-            // test = userMaze.getMaze();
-            // for (int row = 0; row < userX; row++) {
-            //     for (int col = 0; col < userY; col++) {
-            //         std::cout << test[row][col];
-            //     }
-            //     std::cout << std::endl;
-            // }
-
-            Maze(playerOrg, userX, userY, correctInput, userMaze.getMaze());
-            // std::string input; 
-            // std::cin >> input;
-            // if (input == "done") {
-            //     std::cout << "Enter the length and width of maze:" << std::endl;
-            //     int length;
-            //     int width;
-            //     std::cin >> length;
-            //     std::cin >> width;
-            
-            // }
-            // else {
-            //     std::cout << "Invalid input, did you mean \"done\"" << std::endl; 
-            // }
-
-            
-            // mcpp::Coordinate playerOrg = mc.getPlayerPosition();
+            m = new Maze(playerOrg, userX, userY, correctInput, userMaze.getMaze());
             
             curState = ST_Main;
         }
@@ -203,8 +176,14 @@ int main(void){
         }
 
     }
-
+    //maze , access the list
     printExitMassage();
+    // {
+    // Maze Maze;
+    // }
+    // Maze.exitCleanUp();
+    delete m;
+
     
 
     return EXIT_SUCCESS;
