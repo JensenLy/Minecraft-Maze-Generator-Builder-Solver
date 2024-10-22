@@ -127,19 +127,13 @@ Maze::Maze(mcpp::Coordinate basePoint, unsigned int xlen,
     }
 
     for (unsigned int row = 0; row < zlen; row++) {
-    for (unsigned int col = 0; col < xlen; col++) {
-        for (int height = 0; height < 3; height++) {
-            // First, set everything to AIR
-            mc.setBlock(startCoord + mcpp::Coordinate(col, height, row), mcpp::Blocks::AIR);  
-            
-            // Now build the actual maze structure
-            if (test_env.getEnvElement(row, col) == 'x') {
-                // Delay to see the building process
-                std::this_thread::sleep_for(std::chrono::milliseconds(50));
-                // Place ACACIA_WOOD_PLANK where 'x' is present
-                mc.setBlock(startCoord + mcpp::Coordinate(col, height, row), mcpp::Blocks::ACACIA_WOOD_PLANK);
-            } else {
-                // Fix boundary condition for placing BLUE_CARPET on edges
+        for (unsigned int col = 0; col < xlen; col++) {
+          for (int height = 0; height < 3; height++) {
+              mc.setBlock(startCoord+mcpp::Coordinate(col, height, row), mcpp::Blocks::AIR);
+              if (test_env.getEnvElement(row, col) == 'x' || test_env.getEnvElement(row, col) == 'X'){
+                mc.setBlock(startCoord+mcpp::Coordinate(col, height, row), mcpp::Blocks::ACACIA_WOOD_PLANK);
+              }
+              else {
                 if (row == 0 || row == (zlen - 1) || col == 0 || col == (xlen - 1)) {
                     // Only place carpet on the first height layer (ground)
                     mc.setBlock(startCoord + mcpp::Coordinate(col, 0, row), mcpp::Blocks::BLUE_CARPET);

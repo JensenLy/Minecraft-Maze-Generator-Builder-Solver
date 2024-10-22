@@ -123,8 +123,7 @@ void Agent::vecRemoveDups(std::vector<mcpp::Coordinate> &vec){
     vec.erase(std::unique(vec.begin(), vec.end()),vec.end());
 }
 
-void Agent::manualSolve(mcpp::Coordinate playerOrg, int row, int col, char** maze){ 
-    //TO DO: implement the manual solve
+void Agent::manualSolve(mcpp::Coordinate playerOrg, int row, int col, char** maze){
     srand(rand()); 
     int rowRand = 0; 
     int colRand = 0; 
@@ -134,10 +133,38 @@ void Agent::manualSolve(mcpp::Coordinate playerOrg, int row, int col, char** maz
 
         if (maze[rowRand][colRand] == '.') { 
             keepGoing = false; 
-            currPos = playerOrg + mcpp::Coordinate (rowRand, 0 , colRand);
+            currPos = playerOrg + mcpp::Coordinate(rowRand, 0 , colRand);
             mc.setPlayerTilePosition(currPos); 
         }
     }
+}
+
+void Agent::manualSolveTest(mcpp::Coordinate playerOrg, int row, int col, char** maze){ 
+    double furthest = 0.0; 
+    double currDist = 0.0; 
+    mcpp::Coordinate farPoint(0, 0, 0); 
+
+    for (int i = 0; i < row; i++){ 
+        for (int j = 0; j < col; j++){ 
+            if (maze[i][j] == '.'){ 
+                currDist = sqrt(i * i + j * j);  
+            }
+
+            if (currDist > furthest){
+                furthest = currDist; 
+                farPoint = mcpp::Coordinate(i, 0, j); 
+            }
+        }
+    }
+
+    mc.setPlayerTilePosition(playerOrg + farPoint);
+    farPoint = playerOrg + farPoint; 
+    std::string output = "Teleported to: "; 
+    output += std::to_string(farPoint.x); 
+    output += " " + std::to_string(farPoint.y);
+    output += " " + std::to_string(farPoint.z);
+    mc.postToChat(output); 
+
 }
 
 void Agent::rightHandSolve() { 

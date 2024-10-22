@@ -7,6 +7,7 @@
 #include <thread> 
 #include <vector>
 #include <algorithm>
+#include <cmath>
 
 #define MOVE_XPLUS mcpp::Coordinate(1,0,0)
 #define MOVE_XMINUS mcpp::Coordinate(-1,0,0)
@@ -46,6 +47,7 @@ public:
     bool isDone(); 
     void vecRemoveDups(std::vector<mcpp::Coordinate> &vec);
     void manualSolve(mcpp::Coordinate basePoint, int row, int col, char** maze);
+    void manualSolveTest(mcpp::Coordinate playerOrg, int row, int col, char** maze);
     void rightHandSolve(); 
     void bfsSolve(); 
 

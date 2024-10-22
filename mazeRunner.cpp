@@ -35,7 +35,7 @@ int main(void){
     int userY;
     bool correctInput = false;
     mcpp::Coordinate playerOrg;
-    GenerateMaze userMaze = GenerateMaze(userX, userY);
+    GenerateMaze userMaze;
 
     //State machine for menu        
     while (curState != ST_Exit)
@@ -89,20 +89,42 @@ int main(void){
                         else{
                             correctInput = true;
                         }
-                }
+                    }
 
                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
-                userMaze = GenerateMaze(userX, userY);
+                userMaze = GenerateMaze(userX, userY, playerOrg);
                 userMaze.UserInputMaze(userX, userY);
-                // userMaze.printMaze();
+                userMaze.printMaze();
                 
-
                 }
 
             }
             else if(userInput == "2"){
-                std::cout << "To Do Opt 2";
+                std::cout << "Enter the length and width of maze" << std::endl;
+
+                while(!correctInput){
+                    std::cin >> userX >> userY;
+            
+                    if(userX%2 == 0 || userY%2 == 0){
+                        std::cout << "Please enter odd values for the length and width of maze" << std::endl;
+                    }
+                    else{
+                        correctInput = true;
+                    }
+                }
+
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+                playerOrg = mc.getPlayerPosition();
+                userMaze = GenerateMaze(userX, userY, playerOrg);
+                std::cout << "***Printing Maze***" << std::endl;
+                std::cout << "Base Point: " << userMaze.getCord() << std::endl;
+                std::cout << "Structure: " << userMaze.getCord() << std::endl;
+                userMaze.GenerateRandMaze();
+                userMaze.carveMaze();
+                userMaze.printMaze();
+
             }
             else if(userInput == "3"){
                 curState = ST_Main;
@@ -168,6 +190,11 @@ int main(void){
             else if(userInput == "?") { // Placeholder for BFS Solving
                 Agent* solve = new Agent(); 
                 solve->bfsSolve(); 
+                delete solve;
+            }
+            else if(userInput == "!") { // Placeholder for BFS Solving
+                Agent* solve = new Agent(); 
+                solve->manualSolveTest(playerOrg, userMaze.getMazeHeight(), userMaze.getMazeWidth(), userMaze.getMaze()); 
                 delete solve;
             }
             else{
