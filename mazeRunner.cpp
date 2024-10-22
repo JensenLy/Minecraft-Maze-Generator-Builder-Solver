@@ -18,10 +18,17 @@ enum States{
     ST_Exit
 };
 
-int main(void){
+int main(int argc, char* argv[]){
 
-    //bool mode = NORMAL_MODE;
-    //read Mode
+    bool mode = NORMAL_MODE;
+    std::string argument = ""; 
+
+    if (argc > 1) { 
+        argument = std::string(argv[1]);
+        if (argument == "-testmode"){
+            mode = TESTING_MODE; 
+        }
+    }
     
     printStartText();
 
@@ -165,16 +172,19 @@ int main(void){
             // }
 
             
-            // mcpp::Coordinate playerOrg = mc.getPlayerPosition();
-            
+            // mcpp::Coordinate playerOrg = mc.getPlayerPosition(); 
             curState = ST_Main;
         }
         else if(curState == ST_SolveMaze){
             printSolveMazeMenu();
             getline(std::cin, userInput);
-
-            if(userInput == "1"){
-                std::cout << "To Do Opt 1"; 
+            
+            if(userInput == "1" && mode) { // Testmode for manual solving
+                Agent* solve = new Agent(); 
+                solve->manualSolveTest(playerOrg, userMaze.getMazeHeight(), userMaze.getMazeWidth(), userMaze.getMaze()); 
+                delete solve;
+            }
+            else if(userInput == "1"){ 
                 Agent* solve = new Agent(); 
                 solve->manualSolve(playerOrg, userMaze.getMazeHeight(), userMaze.getMazeWidth(), userMaze.getMaze()); 
                 delete solve; 
@@ -190,11 +200,6 @@ int main(void){
             else if(userInput == "?") { // Placeholder for BFS Solving
                 Agent* solve = new Agent(); 
                 solve->bfsSolve(); 
-                delete solve;
-            }
-            else if(userInput == "!") { // Placeholder for BFS Solving
-                Agent* solve = new Agent(); 
-                solve->manualSolveTest(playerOrg, userMaze.getMazeHeight(), userMaze.getMazeWidth(), userMaze.getMaze()); 
                 delete solve;
             }
             else{
