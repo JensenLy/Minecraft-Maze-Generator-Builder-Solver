@@ -3,6 +3,8 @@
 
 #include <vector>
 #include <mcpp/mcpp.h>
+#include <chrono>
+#include <thread>
 
 class Maze
 {
