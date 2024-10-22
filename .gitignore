@@ -1,5 +1,6 @@
 # Prerequisites
 *.d
+mazeRunner
 
 # Compiled Object files
 *.slo
