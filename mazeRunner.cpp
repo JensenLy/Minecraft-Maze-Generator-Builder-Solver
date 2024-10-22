@@ -192,6 +192,11 @@ int main(void){
                 solve->bfsSolve(); 
                 delete solve;
             }
+            else if(userInput == "!") { // Placeholder for BFS Solving
+                Agent* solve = new Agent(); 
+                solve->manualSolveTest(playerOrg, userMaze.getMazeHeight(), userMaze.getMazeWidth(), userMaze.getMaze()); 
+                delete solve;
+            }
             else{
                 std::cout << "Please select menu item with numbers 1 to 3"; 
             }
