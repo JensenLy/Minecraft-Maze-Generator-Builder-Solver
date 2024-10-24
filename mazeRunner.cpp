@@ -137,8 +137,11 @@ int main(void){
         }
         else if(curState == ST_Creators){
             std::cout << "Building maze" << std::endl;
-
             m = new Maze(playerOrg, userX, userY, correctInput, userMaze.getMaze());
+
+            m->terraformTerrain();
+            m->storeTerrain();
+            m->buildMaze();
             
             curState = ST_Main;
         }
