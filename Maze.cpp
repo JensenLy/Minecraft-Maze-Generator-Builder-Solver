@@ -19,10 +19,10 @@ Maze::Maze(mcpp::Coordinate basePoint, unsigned int xlen,
     
     mc.doCommand("time set day");
 
-    this->maze = new char*[zlen];
-    for (unsigned int i = 0; i < zlen; ++i) {
-        this->maze[i] = new char[xlen];
-        for (unsigned int j = 0; j < xlen; ++j) {
+    this->maze = new char*[xlen];
+    for (unsigned int i = 0; i < xlen; ++i) {
+        this->maze[i] = new char[zlen];
+        for (unsigned int j = 0; j < zlen; ++j) {
             this->maze[i][j] = sourceMaze[i][j];  // Copying each element
         }
     }
@@ -53,6 +53,19 @@ Maze::Maze(mcpp::Coordinate basePoint, unsigned int xlen,
 }
 
 
+    void Maze::scanTerrain() {
+      maxheight = mc.getHeight(build_x, build_z);
+      mcpp::Coordinate startCoord(build_x, build_y, build_z);
+      for (unsigned int row = 0; row < zlen; row++) {
+          for (unsigned int col = 0; col < xlen; col++) {
+            if ((mc.getHeight(build_x + row, build_z + col)) > maxheight) {
+              maxheight = mc.getHeight(build_x + row, build_z + col);
+            }
+          }
+      }
+      maxheight -= (build_y + 1);
+
+    }
     // Terraforms terrain
     // Goes through row by row
     void Maze::terraformTerrain() {
@@ -60,7 +73,6 @@ Maze::Maze(mcpp::Coordinate basePoint, unsigned int xlen,
       for (unsigned int row = 0; row < zlen; row++) {
           // Goes through column by column
           for (unsigned int col = 0; col < xlen; col++) {
-
             counter = build_y - mc.getHeight(build_x + row, build_z + col);
             if (counter > 0) {
                 tempy = mc.getHeight(build_x + row, build_z + col) - build_y;
@@ -70,6 +82,16 @@ Maze::Maze(mcpp::Coordinate basePoint, unsigned int xlen,
                   tempy++;
                 }
             }
+            // else {
+            //   int i = 1;
+            //   mcpp::BlockType blockcheck;
+            //   int heightcheck;
+            //   heightcheck = 
+            //   while ((mc.getHeight(build_x + row, build_z + col) - i) ) {
+
+            //   }
+            // }
+
           }
       }
     }
@@ -79,7 +101,7 @@ Maze::Maze(mcpp::Coordinate basePoint, unsigned int xlen,
       mcpp::Coordinate startCoord(build_x, build_y, build_z);
       for (unsigned int row = 0; row < zlen; row++) {
           for (unsigned int col = 0; col < xlen; col++) {
-            for (int height = 0; height < 3; height++) {
+            for (int height = 0; height < maxheight; height++) {
                 if (mc.getBlock(startCoord+mcpp::Coordinate(row, height, col)) != mcpp::Blocks::AIR) {
                 mcpp::Coordinate currCoord;
                 mcpp::BlockType currBlock;
@@ -104,17 +126,18 @@ Maze::Maze(mcpp::Coordinate basePoint, unsigned int xlen,
       for (unsigned int row = 0; row < zlen; row++) {
         for (unsigned int col = 0; col < xlen; col++) {
           for (int height = 0; height < 3; height++) {
-            mc.setBlock(startCoord+mcpp::Coordinate(col, height, row), mcpp::Blocks::AIR);
+            mc.setBlock(startCoord+mcpp::Coordinate(row, height, col), mcpp::Blocks::AIR);
               // If there is an x or X in the maze structure then place ACACIA_WOOD_PLANK
-              if (maze[row][col] == 'x' || maze[row][col] == 'X') {
+              if (maze[col][row] == 'x' || maze[col][row] == 'X') {
+                std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
               // if (test_env.getEnvElement(row, col) == 'x' || test_env.getEnvElement(row, col) == 'X'){
-                mc.setBlock(startCoord+mcpp::Coordinate(col, height, row), mcpp::Blocks::ACACIA_WOOD_PLANK);
+                mc.setBlock(startCoord+mcpp::Coordinate(row, height, col), mcpp::Blocks::ACACIA_WOOD_PLANK);
               }
               else {
                 if (row == 0 || row == (zlen - 1) || col == 0 || col == (xlen - 1)) {
                   // Only place carpet on the first height layer (ground)
-                  mc.setBlock(startCoord + mcpp::Coordinate(col, 0, row), mcpp::Blocks::BLUE_CARPET);
+                  mc.setBlock(startCoord + mcpp::Coordinate(row, 0, col), mcpp::Blocks::BLUE_CARPET);
                 }
               }
           }
@@ -191,4 +214,3 @@ Maze::~Maze()
   list.placeback();
 
 }
-

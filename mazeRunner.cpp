@@ -146,8 +146,9 @@ int main(int argc, char* argv[]){
             std::cout << "Building maze" << std::endl;
             m = new Maze(playerOrg, userX, userY, correctInput, userMaze.getMaze());
 
-            m->terraformTerrain();
+            m->scanTerrain();
             m->storeTerrain();
+            m->terraformTerrain();
             m->buildMaze();
             
             curState = ST_Main;

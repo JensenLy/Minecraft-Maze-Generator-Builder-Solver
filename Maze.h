@@ -21,7 +21,8 @@ public:
     void terraformTerrain();
     void storeTerrain();
     void buildMaze();
-
+    void scanTerrain();
+    
 private:
     /* data */
     char** maze;
@@ -37,6 +38,7 @@ private:
     int build_z;
     int tempy;
     int counter;
+    int maxheight;
 
 
 };
