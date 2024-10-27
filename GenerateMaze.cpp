@@ -10,6 +10,7 @@ GenerateMaze::GenerateMaze(int x, int y, mcpp::Coordinate currCord){
     this->width = x;
     this->height = y;
     this->cord = currCord;
+    
 }
 
 // GenerateMaze::~GenerateMaze() {
@@ -18,6 +19,114 @@ GenerateMaze::GenerateMaze(int x, int y, mcpp::Coordinate currCord){
 //     }
 //     delete[] maze;
 // }
+
+GenerateMaze GenerateMaze::ValidateUserMazeSize(){
+    bool isDone = false; 
+    bool correctInput = false;
+    int userX = 0;
+    int userY = 0;
+    mcpp::Coordinate playerOrg;
+    std::string doneInput;
+
+    std::cout << "In Minecraft navigate to where you want the maze to be in Minecraft and type - done:" << std::endl;
+    std::cin >> doneInput;
+
+    while(!isDone){
+        if(doneInput == "done"){
+            isDone = true;
+        }
+        else{
+            std::cout << "In Minecraft navigate to where you want the maze to be in Minecraft and type - done:" << std::endl;
+            std::cin >> doneInput;
+        }
+    }
+
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+    playerOrg = mc.getPlayerPosition();
+
+    std::cout << "Enter the length and width of maze" << std::endl;
+
+    while(!correctInput){
+        std::string whInput;
+        std::getline(std::cin, whInput);
+
+        std::istringstream iss(whInput);
+        // Check if exactly two integers were entered
+        int x, y;
+        if (iss >> x >> y) {
+            if (x % 2 != 0 && y % 2 != 0 && x > 0 && y > 0) {
+                correctInput = true;
+                userX = x;
+                userY = y;
+
+            } else {
+                std::cout << "Please enter 2 **odd** values greater than 0 for the length and width of the maze." << std::endl;
+            }
+        } else {
+            std::cout << "Invalid input. Please enter two integer values." << std::endl;
+        }
+    }
+
+    return GenerateMaze(userX, userY, playerOrg);
+
+}
+
+void GenerateMaze::ValidateUserMazeInput() {
+    std::string userInput;
+    bool isValidInput = false;
+
+    int x = width;
+    int y = height;
+
+    std::cout << "Enter the maze structure (only 'X' and '.'): " << std::endl;
+
+    for (int i = 0; i < x; i++) {
+        // Reset for each row
+        isValidInput = false;
+
+        while (!isValidInput) {
+            std::getline(std::cin, userInput);
+
+            // Check input length
+            if (userInput.size() != static_cast<size_t>(y)) {
+                std::cout << "Please enter exactly " << y << " characters." << std::endl;
+            } else {
+                // Assume input is valid, check each character
+                isValidInput = true;
+
+                for (char c : userInput) {
+                    if (c != 'X' && c != '.') {
+                        std::cout << "Please enter only 'X' and '.' for the maze structure." << std::endl;
+                        isValidInput = false;  // Mark input as invalid
+                        // No `break` needed; just let the loop continue to next character
+                    }
+                }
+
+                // If input is still valid, copy it to the maze
+                if (isValidInput) {
+                    for (int j = 0; j < y; j++) {
+                        maze[i][j] = userInput[j];
+                    }
+                }
+            }
+        }
+    }
+
+    std::cout << "Maze read successfully." << std::endl;
+}
+
+void GenerateMaze::printMaze(){
+    int x = maze.size();
+    int y = maze[1].size();
+
+    for(int i = 0; i < x; i++){
+        for(int j = 0; j < y; j++){
+            std::cout << maze[i][j];
+        }
+        std::cout << std::endl;
+    }
+}
 
 void GenerateMaze::GenerateRandMaze(){
     int i;
@@ -66,6 +175,32 @@ void GenerateMaze::GenerateRandMaze(){
 
 }
 
+void GenerateMaze::GenerateTestMaze(){
+    int i;
+    int j;
+
+    int x = width;
+    int y = height;
+
+    int numSpaces = 0;
+
+    //Clear out empty spaces at odd i and j indexes
+    for(i = 0; i < x; i++){
+        for(j = 0; j < y; j++){
+            if(i % 2 != 0 && j % 2 != 0){
+                maze[i][j] = ' ';
+                numSpaces++;
+            }
+        }
+    }
+
+    maze[1][1] = '.';
+    maze[1][0] = '.';
+    currLoc[0] = 1;
+    currLoc[1] = 1;
+
+}
+
 void GenerateMaze::carveMaze(){
    pathWay.push_back(currLoc);
 
@@ -74,19 +209,23 @@ void GenerateMaze::carveMaze(){
 
         int dirX = 0, dirY = 0;
 
-        if(randChoice == 1){ // UP
+        // UP
+        if(randChoice == 1){
             dirX = -1;
             dirY = 0;
         }
-        else if(randChoice == 2){ // RIGHT
+        // RIGHT
+        else if(randChoice == 2){
             dirX = 0;
             dirY = 1;
         }
-        else if(randChoice == 3){ // DOWN
+        // DOWN
+        else if(randChoice == 3){
             dirX = 1;
             dirY = 0;
         }
-        else if(randChoice == 4){ // LEFT
+        // LEFT
+        else if(randChoice == 4){
             dirX = 0;
             dirY = -1;
         }
@@ -100,9 +239,71 @@ void GenerateMaze::carveMaze(){
             currLoc[1] += 2 * dirY;
 
             pathWay.push_back({currLoc[0], currLoc[1]});
-            maze[currLoc[0]][currLoc[1]] = '.'; // Mark new cell as visited
+            // Mark new cell as visited
+            maze[currLoc[0]][currLoc[1]] = '.';
         } else {
             // Backtrack
+            pathWay.pop_back();
+            if (!pathWay.empty()) {
+                currLoc = pathWay.back();
+            }
+        }
+    }
+
+}
+
+void GenerateMaze::carveTestMaze(){
+    pathWay.push_back(currLoc);
+
+    while(!pathWay.empty()){
+        bool moved = false;
+
+        for(int dir = 1; dir <= 4; ++dir){
+
+            int dirX;
+            int dirY;
+        
+            // UP
+            if(dir == 1){
+                dirX = -1;
+                dirY = 0;
+            }
+            // RIGHT
+            else if(dir == 2){
+                dirX = 0;
+                dirY = 1;
+            }
+            // DOWN
+            else if(dir == 3){
+                dirX = 1;
+                dirY = 0;
+            }
+            // LEFT
+            else if(dir == 4){
+                dirX = 0;
+                dirY = -1;
+            }
+
+            if (isValid(currLoc[0], currLoc[1], dirX, dirY)) {
+                // Carve the wall between current and next cell
+                maze[currLoc[0] + dirX][currLoc[1] + dirY] = '.';
+
+                // Move to the next cell (skip the wall)
+                currLoc[0] += 2 * dirX;
+                currLoc[1] += 2 * dirY;
+
+                // Add new location to path
+                pathWay.push_back({currLoc[0], currLoc[1]});
+                // Mark the new cell as visited
+                maze[currLoc[0]][currLoc[1]] = '.';
+
+                moved = true;
+                break;  // Stop checking directions once we move
+            }
+        }
+
+        if (!moved) {
+            // No valid moves, backtrack to previous cell
             pathWay.pop_back();
             if (!pathWay.empty()) {
                 currLoc = pathWay.back();
@@ -165,42 +366,9 @@ bool GenerateMaze::isValid(int x, int y, int dirX, int dirY){
 
 }
 
-void GenerateMaze::UserInputMaze(int x, int y){
-    std::string userInput;
-
-    std::cout << "Enter the maze structure:" << std::endl;
-
-    // Ignore any leftover characters from the input buffer
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
-    for(int i = 0; i < x; i++){
-        std::getline(std::cin, userInput);
-
-        for(int j = 0; j < y; j++) {
-            maze[i][j] = userInput[j];
-        }
-    }
-
-    std::cout << "Maze read successfully";
-    
-}
-
-void GenerateMaze::printMaze(){
-    int x = maze.size();
-    int y = maze[1].size();
-
-    for(int i = 0; i < x; i++){
-        for(int j = 0; j < y; j++){
-            std::cout << maze[i][j];
-        }
-        std::cout << std::endl;
-    }
-}
-
 int GenerateMaze::getMazeHeight(){
     return height;
 }
-
 
 int GenerateMaze::getMazeWidth(){
     return width;

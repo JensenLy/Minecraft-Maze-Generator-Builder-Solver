@@ -6,6 +6,9 @@
 #include <iostream>
 #include <algorithm>
 #include <array>
+#include <limits>
+#include <sstream>
+#include <string>
 #include <mcpp/mcpp.h>
 #include "Maze.h"
 #include "env.h"
@@ -16,14 +19,27 @@ public:
 
 GenerateMaze();
 GenerateMaze(int x, int y, mcpp::Coordinate currCord);
+
+
+GenerateMaze ValidateUserMazeSize();
+void ValidateUserMazeInput();
+
+
 void GenerateRandMaze();
+void GenerateTestMaze();
 void carveMaze();
+void carveTestMaze();
 int randomMove(int x, int y);
 bool isValid(int x, int y, int dirX, int dirY);
-void UserInputMaze(int x, int y);
+
+
 void printMaze();
+
+
 int getMazeHeight();
 int getMazeWidth();
+
+
 char** getMaze() const;
 mcpp::Coordinate getCord();
 
@@ -36,6 +52,7 @@ std::vector<std::array<int, 2>> pathWay;
 int width;
 int height;
 mcpp::Coordinate cord;
+mcpp::MinecraftConnection mc;
 
 };
 
