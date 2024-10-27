@@ -58,12 +58,13 @@ Maze::Maze(mcpp::Coordinate basePoint, unsigned int xlen,
       mcpp::Coordinate startCoord(build_x, build_y, build_z);
       for (unsigned int row = 0; row < zlen; row++) {
           for (unsigned int col = 0; col < xlen; col++) {
-            if ((mc.getHeight(build_x + row, build_z + col)) > maxheight) {
-              maxheight = mc.getHeight(build_x + row, build_z + col);
+            if ((mc.getHeight(build_x + col, build_z + row)) > maxheight) {
+              maxheight = mc.getHeight(build_x + col, build_z + row);
             }
           }
       }
-      maxheight -= (build_y + 1);
+      
+      maxheight -= (build_y - 1);
 
     }
     // Terraforms terrain
@@ -76,11 +77,16 @@ Maze::Maze(mcpp::Coordinate basePoint, unsigned int xlen,
             counter = build_y - mc.getHeight(build_x + row, build_z + col);
             if (counter > 0) {
                 tempy = mc.getHeight(build_x + row, build_z + col) - build_y;
+                tempy2 = mc.getHeight(build_x + row, build_z + col) - build_y;
                 block = mc.getBlock(startCoord+mcpp::Coordinate(row, tempy, col));
                 for (int i = 0; i < counter; i++) {
                   mc.setBlock(startCoord+mcpp::Coordinate(row, tempy, col), block);
+                  currCoord = startCoord+mcpp::Coordinate(row, tempy2 + 1, col);
+                  list.insert(currCoord, mcpp::Blocks::AIR);
                   tempy++;
+                  tempy2++;
                 }
+                
             }
             // else {
             //   int i = 1;
@@ -103,8 +109,6 @@ Maze::Maze(mcpp::Coordinate basePoint, unsigned int xlen,
           for (unsigned int col = 0; col < xlen; col++) {
             for (int height = 0; height < maxheight; height++) {
                 if (mc.getBlock(startCoord+mcpp::Coordinate(row, height, col)) != mcpp::Blocks::AIR) {
-                mcpp::Coordinate currCoord;
-                mcpp::BlockType currBlock;
                 currCoord = startCoord+mcpp::Coordinate(row, height, col);
                 currBlock = mc.getBlock(startCoord+mcpp::Coordinate(row, height, col));
                 list.insert(currCoord, currBlock);
@@ -198,14 +202,14 @@ Maze::Maze(mcpp::Coordinate basePoint, unsigned int xlen,
 
 Maze::~Maze()
 {
-  for (unsigned int i = 0; i < zlen; i++) {
+  for (unsigned int i = 0; i < xlen; i++) {
     delete[] maze[i];
   }
   delete[] maze;
 
   mcpp::Coordinate startCoord(build_x, build_y, build_z);
-  for (unsigned int row = 0; row < xlen; row++) {
-      for (unsigned int col = 0; col < zlen; col++) {
+  for (unsigned int row = 0; row < zlen; row++) {
+      for (unsigned int col = 0; col < xlen; col++) {
         for (int height = 0; height < 3; height++) {
           mc.setBlock(startCoord+mcpp::Coordinate(row, height, col), mcpp::Blocks::AIR);
         }
