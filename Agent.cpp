@@ -123,7 +123,8 @@ void Agent::vecRemoveDups(std::vector<mcpp::Coordinate> &vec){
     vec.erase(std::unique(vec.begin(), vec.end()),vec.end());
 }
 
-void Agent::manualSolve(mcpp::Coordinate playerOrg, int row, int col, char** maze){
+void Agent::manualSolve\
+(mcpp::Coordinate playerOrg, int row, int col, char** maze){
     srand(rand()); 
     int rowRand = 0; 
     int colRand = 0; 
@@ -139,7 +140,8 @@ void Agent::manualSolve(mcpp::Coordinate playerOrg, int row, int col, char** maz
     }
 }
 
-void Agent::manualSolveTest(mcpp::Coordinate playerOrg, int row, int col, char** maze){ 
+void Agent::manualSolveTest\
+(mcpp::Coordinate playerOrg, int row, int col, char** maze){ 
     double furthest = 0.0; 
     double currDist = 0.0; 
     mcpp::Coordinate farPoint(0, 0, 0); 
