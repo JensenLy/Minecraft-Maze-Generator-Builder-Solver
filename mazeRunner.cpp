@@ -156,32 +156,52 @@ int main(int argc, char* argv[]){
         else if(curState == ST_SolveMaze){
             printSolveMazeMenu();
             getline(std::cin, userInput);
-            
-            if(userInput == "1" && mode) { // Testmode for manual solving
-                Agent* solve = new Agent(); 
-                solve->manualSolveTest(playerOrg, userMaze.getMazeHeight(), userMaze.getMazeWidth(), userMaze.getMaze()); 
-                delete solve;
+
+            if (mode) { // Test mode
+                if(userInput == "1") {
+                    Agent* solve = new Agent(); 
+                    solve->manualSolveTest(playerOrg, userMaze.getMazeHeight(), userMaze.getMazeWidth(), userMaze.getMaze()); 
+                    delete solve;
+                }
+                else if(userInput == "2"){
+                    Agent* solve = new Agent(); 
+                    solve->rightHandSolve(); 
+                    delete solve; 
+                }
+                else if(userInput == "3"){
+                    curState = ST_Main;
+                }
+                else if(userInput == "?") { // Placeholder for BFS Solving
+                    Agent* solve = new Agent(); 
+                    solve->bfsSolve(); 
+                    delete solve;
+                }
+                else{
+                    std::cout << "Please select menu item with numbers 1 to 3"; 
+                }
             }
-            else if(userInput == "1"){ 
-                Agent* solve = new Agent(); 
-                solve->manualSolve(playerOrg, userMaze.getMazeHeight(), userMaze.getMazeWidth(), userMaze.getMaze()); 
-                delete solve; 
-            }
-            else if(userInput == "2"){
-                Agent* solve = new Agent(); 
-                solve->rightHandSolve(); 
-                delete solve; 
-            }
-            else if(userInput == "3"){
-                curState = ST_Main;
-            }
-            else if(userInput == "?") { // Placeholder for BFS Solving
-                Agent* solve = new Agent(); 
-                solve->bfsSolve(); 
-                delete solve;
-            }
-            else{
-                std::cout << "Please select menu item with numbers 1 to 3"; 
+            else { // Normal mode
+                if(userInput == "1"){ 
+                    Agent* solve = new Agent(); 
+                    solve->manualSolve(playerOrg, userMaze.getMazeHeight(), userMaze.getMazeWidth(), userMaze.getMaze()); 
+                    delete solve; 
+                }
+                else if(userInput == "2"){
+                    Agent* solve = new Agent(); 
+                    solve->rightHandSolve(); 
+                    delete solve; 
+                }
+                else if(userInput == "3"){
+                    curState = ST_Main;
+                }
+                else if(userInput == "?") { // Placeholder for BFS Solving
+                    Agent* solve = new Agent(); 
+                    solve->bfsSolve(); 
+                    delete solve;
+                }
+                else{
+                    std::cout << "Please select menu item with numbers 1 to 3"; 
+                }
             }
         }
 

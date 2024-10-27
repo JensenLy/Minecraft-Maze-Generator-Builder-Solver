@@ -52,5 +52,8 @@
         "streambuf": "cpp",
         "typeinfo": "cpp"
     },
+    "editor.rulers": [
+    80
+    ],
     "makefile.configureOnOpen": false
 }
