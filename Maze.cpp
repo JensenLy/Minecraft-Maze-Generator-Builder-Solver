@@ -87,7 +87,6 @@ Maze::Maze(mcpp::Coordinate basePoint, unsigned int xlen,
                   tempy2++;
                 }
                 
-                
             }
             // else {
             //   int i = 1;
