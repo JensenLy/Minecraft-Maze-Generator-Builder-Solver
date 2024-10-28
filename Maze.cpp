@@ -26,19 +26,6 @@ Maze::Maze(mcpp::Coordinate basePoint, unsigned int xlen,
             this->maze[i][j] = sourceMaze[i][j];  // Copying each element
         }
     }
-
-    // Env test_env(zlen, xlen);
-    
-    // char readChar;
-    
-
-    // for (unsigned int row = 0; row < zlen; row++) {
-    //     for (unsigned int col = 0; col < xlen; col++) {
-    //     readChar = maze[row][col];
-    //     test_env.setEnvElement(row, col, readChar);
-    //     }
-    // }
-
     
     mcpp::Coordinate playerOrg = basePoint;
     build_x = playerOrg.x;
@@ -74,30 +61,20 @@ Maze::Maze(mcpp::Coordinate basePoint, unsigned int xlen,
       for (unsigned int row = 0; row < zlen; row++) {
           // Goes through column by column
           for (unsigned int col = 0; col < xlen; col++) {
-            counter = build_y - mc.getHeight(build_x + row, build_z + col);
-            if (counter > 0) {
-                tempy = mc.getHeight(build_x + row, build_z + col) - build_y;
-                tempy2 = mc.getHeight(build_x + row, build_z + col) - build_y;
-                block = mc.getBlock(startCoord+mcpp::Coordinate(row, tempy, col));
-                for (int i = 0; i < counter; i++) {
-                  mc.setBlock(startCoord+mcpp::Coordinate(row, tempy, col), block);
-                  currCoord = startCoord+mcpp::Coordinate(row, tempy2 + 1, col);
-                  list.insert(currCoord, mcpp::Blocks::AIR);
-                  tempy++;
-                  tempy2++;
-                }
-                
+            counter = (build_y - 1) - mc.getHeight(build_x + row, build_z + col);
+
+            if (counter > 0) { 
+              // Calculate the current terrain height
+              tempy = mc.getHeight(build_x + row, build_z + col) - build_y;
+              block = mc.getBlock(startCoord+mcpp::Coordinate(row, tempy, col));
+              for (int i = 0; i < counter; i++) {
+                mc.setBlock(startCoord+mcpp::Coordinate(row, tempy + 1, col), block);
+                std::this_thread::sleep_for(std::chrono::milliseconds(50));
+                currCoord = startCoord+mcpp::Coordinate(row, tempy + 1, col);
+                list.insert(currCoord, mcpp::Blocks::AIR);
+                tempy++;
+              }
             }
-            // else {
-            //   int i = 1;
-            //   mcpp::BlockType blockcheck;
-            //   int heightcheck;
-            //   heightcheck = 
-            //   while ((mc.getHeight(build_x + row, build_z + col) - i) ) {
-
-            //   }
-            // }
-
           }
       }
     }
@@ -109,15 +86,16 @@ Maze::Maze(mcpp::Coordinate basePoint, unsigned int xlen,
           for (unsigned int col = 0; col < xlen; col++) {
             for (int height = 0; height < maxheight; height++) {
                 if (mc.getBlock(startCoord+mcpp::Coordinate(row, height, col)) != mcpp::Blocks::AIR) {
-                currCoord = startCoord+mcpp::Coordinate(row, height, col);
-                currBlock = mc.getBlock(startCoord+mcpp::Coordinate(row, height, col));
-                list.insert(currCoord, currBlock);
+                  std::this_thread::sleep_for(std::chrono::milliseconds(50));
+                  currCoord = startCoord+mcpp::Coordinate(row, height, col);
+                  currBlock = mc.getBlock(startCoord+mcpp::Coordinate(row, height, col));
+                  list.insert(currCoord, currBlock);
 
-                std::cout << currCoord << std::endl;
-                std::cout << currBlock << std::endl;
+                  // std::cout << currCoord << std::endl;
+                  // std::cout << currBlock << std::endl;
 
 
-                mc.setBlock(startCoord+mcpp::Coordinate(row, height, col), mcpp::Blocks::AIR);
+                  mc.setBlock(startCoord+mcpp::Coordinate(row, height, col), mcpp::Blocks::AIR);
                 }
             }
           }
@@ -148,40 +126,6 @@ Maze::Maze(mcpp::Coordinate basePoint, unsigned int xlen,
         }
       }
     }
-
-    // for (unsigned int row = 0; row < zlen; row++) {
-    //     for (unsigned int col = 0; col < xlen; col++) {
-    //       for (int height = 0; height < 3; height++) {
-    //           mc.setBlock(startCoord+mcpp::Coordinate(col, height, row), mcpp::Blocks::AIR);
-    //           if (test_env.getEnvElement(row, col) == 'x'){
-    //             std::this_thread::sleep_for(std::chrono::milliseconds(50));
-    //             mc.setBlock(startCoord+mcpp::Coordinate(col, height, row), mcpp::Blocks::ACACIA_WOOD_PLANK);
-    //           }
-    //           else {
-    //             if (row == 0 || row == (zlen - 1) || col == 0 || col == (xlen - 1)) {
-    //               mc.setBlock(startCoord+mcpp::Coordinate(col, 0, row), mcpp::Blocks::BLUE_CARPET);
-    //             }
-    //           }
-              
-    //       }
-    //     }
-    // }
-    // for (unsigned int row = 0; row < zlen; row++) {
-    //     for (unsigned int col = 0; col < xlen; col++) {
-    //       for (int height = 0; height < 3; height++) {
-    //           mc.setBlock(startCoord+mcpp::Coordinate(row, height, col), mcpp::Blocks::AIR);
-    //           if (test_env.getEnvElement(row, col) == 'x'){
-    //             mc.setBlock(startCoord+mcpp::Coordinate(row, height, col), mcpp::Blocks::ACACIA_WOOD_PLANK);
-    //           }
-    //           else {
-    //             if (row == 0 || row == (zlen - 1) || col == 0 || col == (xlen - 1)) {
-    //               mc.setBlock(startCoord+mcpp::Coordinate(row, 0, col), mcpp::Blocks::BLUE_CARPET);
-    //             }
-    //           }
-              
-    //       }
-    //     }
-    // }
 
 
 // Restores the terrain back to how it was before clearing the area

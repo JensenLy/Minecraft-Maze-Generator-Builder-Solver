@@ -37,7 +37,6 @@ private:
     int build_y;
     int build_z;
     int tempy;
-    int tempy2;
     int counter;
     int maxheight;
     mcpp::Coordinate currCoord;

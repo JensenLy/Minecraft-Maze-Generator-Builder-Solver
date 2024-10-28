@@ -5,7 +5,8 @@
     // head = new Node();
 
     // Function to insert a new node with a coordinate and blockType object
-    void LinkedListCoordinate::insert(mcpp::Coordinate coordinate, mcpp::BlockType blockType) {
+    void LinkedListCoordinate::insert\
+    (mcpp::Coordinate coordinate, mcpp::BlockType blockType) {
         // Node* newNode = nullptr;
         // this->coordinate = coordinate;
         // this->blockType = blockType;
