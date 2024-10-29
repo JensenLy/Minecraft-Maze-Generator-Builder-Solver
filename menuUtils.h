@@ -33,7 +33,8 @@ void printSolveMazeMenu(void){
     std::cout << "------------- SOLVE MAZE -------------" << std::endl;
     std::cout << "1) Solve Manually" << std::endl;
     std::cout << "2) Show Escape Route" << std::endl;
-    std::cout << "3) Back" << std::endl;
+    std::cout << "3) Show Escape Route (Enhanced)" << std::endl;
+    std::cout << "4) Back" << std::endl;
     std::cout << std::endl;
     std::cout << "Enter Menu item to continue: " << std::endl;
 }

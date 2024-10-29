@@ -169,6 +169,68 @@ void Agent::manualSolveTest\
 
 }
 
+void Agent::initialiseSolve(){ 
+    bool end = false; 
+    srand(rand()); 
+
+    while(!end){
+        if(!checkNorth()){ 
+            orientation = 3; 
+            end = true; 
+        }
+        else if (!checkEast()){ 
+            orientation = 0; 
+            end = true; 
+        }
+        else if (!checkSouth()){ 
+            orientation = 1; 
+            end = true; 
+        }
+        else if (!checkWest()){ 
+            orientation = 2; 
+            end = true; 
+        }
+        else {
+            if (rand() % 4 == 0){ 
+                currPos = currPos + MOVE_XPLUS;
+                mc.setPlayerPosition(currPos);  
+            }
+            else if (rand() % 4 == 1){ 
+                currPos = currPos + MOVE_ZPLUS;
+                mc.setPlayerPosition(currPos);   
+            }
+            else if (rand() % 4 == 2){ 
+                currPos = currPos + MOVE_XMINUS;
+                mc.setPlayerPosition(currPos);   
+            }
+            else if (rand() % 4 == 3){ 
+                currPos = currPos + MOVE_ZMINUS;
+                mc.setPlayerPosition(currPos);  
+            }
+        }
+    } 
+    mc.postToChat("Orientation: " + std::to_string(orientation % 4));
+}
+
+void Agent::initialiseSolveTest(){  
+    // bool end = false; 
+    orientation = 3; 
+    if (!checkNorth()){ 
+        orientation = 3; 
+    }
+    else if (!checkEast()){ 
+        orientation = 0;
+    }
+    else if (!checkSouth()){ 
+        orientation = 1;
+    }
+    else if (!checkWest()){ 
+        orientation = 2;
+    }
+
+    mc.postToChat("Orientation: " + std::to_string(orientation % 4)); 
+}
+
 void Agent::rightHandSolve() { 
     mc.doCommand("time set day");
 
@@ -342,7 +404,7 @@ void Agent::bfsSolve(){
         currPos = path.at(j - 1); 
         mc.setBlock(currPos, mcpp::Blocks::LIME_CARPET);
         reportStep();
-        std::this_thread::sleep_for(std::chrono::milliseconds(650));
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
     }
     mc.setBlock(currPos, mcpp::Blocks::AIR);
     mc.postToChat("Congratulations! You reached the exit!"); 
