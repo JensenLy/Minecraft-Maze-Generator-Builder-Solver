@@ -44,6 +44,7 @@ GenerateMaze GenerateMaze::ValidateUserMazeSize(){
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
     playerOrg = mc.getPlayerPosition();
+    playerOrg.y = (mc.getHeight(playerOrg.x, playerOrg.z))+1;
 
     std::cout << "Enter the length and width of maze" << std::endl;
 
@@ -198,6 +199,11 @@ void GenerateMaze::GenerateTestMaze(){
     maze[1][0] = '.';
     currLoc[0] = 1;
     currLoc[1] = 1;
+
+    cord.x = 4848;
+    cord.y = 71;
+    cord.z = 4369;
+    mc.setPlayerPosition(cord);
 
 }
 
