@@ -33,7 +33,8 @@ void printSolveMazeMenu(void){
     std::cout << "------------- SOLVE MAZE -------------" << std::endl;
     std::cout << "1) Solve Manually" << std::endl;
     std::cout << "2) Show Escape Route" << std::endl;
-    std::cout << "3) Back" << std::endl;
+    std::cout << "3) Show Escape Route (Enhanced)" << std::endl;
+    std::cout << "4) Back" << std::endl;
     std::cout << std::endl;
     std::cout << "Enter Menu item to continue: " << std::endl;
 }
@@ -44,7 +45,8 @@ void printTeamInfo(void){
     std::cout << "Team members:" << std::endl;
 
     //TODO: change this part to reflect your team**********
-    std::cout << "\t [1] Ruwan Tennakoon (ruwan.tennekoon@rmit.edu.au)" << std::endl;
+    std::cout << "\t [1] Kien Hung Ly (s3977367@student.rmit.edu.au)" << std::endl;
+    std::cout << "\t [2] Nathan Yong (s4090456@student.rmit.edu.au)" << std::endl;
     std::cout << "\t [2] Steven Korevaar (steven.korevaar@rmit.edu.au)" << std::endl;
     //*************
 

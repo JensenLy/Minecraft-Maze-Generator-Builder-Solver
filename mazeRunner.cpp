@@ -137,19 +137,24 @@ int main(int argc, char* argv[]){
 
             if (mode) { // Test mode
                 if(userInput == "1") {
-                    Agent* solve = new Agent(); 
-                    solve->manualSolveTest(userMaze.getCord(), userMaze.getMazeHeight(), userMaze.getMazeWidth(), userMaze.getMaze()); 
+                    Agent* solve = new Agent();  
+                    
+                    solve->manualSolveTest(userMaze.getCord(),\
+                    userMaze.getMazeHeight(), userMaze.getMazeWidth(), \
+                    userMaze.getMaze()); 
+
                     delete solve;
                 }
                 else if(userInput == "2"){
                     Agent* solve = new Agent(); 
+                    solve->initialiseSolveTest();
                     solve->rightHandSolve(); 
                     delete solve; 
                 }
-                else if(userInput == "3"){
+                else if(userInput == "4"){
                     curState = ST_Main;
                 }
-                else if(userInput == "?") { // Placeholder for BFS Solving
+                else if(userInput == "3") { // Placeholder for BFS Solving
                     Agent* solve = new Agent(); 
                     solve->bfsSolve(); 
                     delete solve;
@@ -161,18 +166,23 @@ int main(int argc, char* argv[]){
             else { // Normal mode
                 if(userInput == "1"){ 
                     Agent* solve = new Agent(); 
-                    solve->manualSolve(userMaze.getCord(), userMaze.getMazeHeight(), userMaze.getMazeWidth(), userMaze.getMaze()); 
+                    
+                    solve->manualSolve(userMaze.getCord(), \
+                    userMaze.getMazeHeight(), userMaze.getMazeWidth(), \
+                    userMaze.getMaze()); 
+
                     delete solve; 
                 }
                 else if(userInput == "2"){
                     Agent* solve = new Agent(); 
+                    solve->initialiseSolve(); 
                     solve->rightHandSolve(); 
                     delete solve; 
                 }
-                else if(userInput == "3"){
+                else if(userInput == "4"){
                     curState = ST_Main;
                 }
-                else if(userInput == "?") { // Placeholder for BFS Solving
+                else if(userInput == "3") { // Placeholder for BFS Solving
                     Agent* solve = new Agent(); 
                     solve->bfsSolve(); 
                     delete solve;

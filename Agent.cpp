@@ -123,7 +123,8 @@ void Agent::vecRemoveDups(std::vector<mcpp::Coordinate> &vec){
     vec.erase(std::unique(vec.begin(), vec.end()),vec.end());
 }
 
-void Agent::manualSolve(mcpp::Coordinate playerOrg, int row, int col, char** maze){
+void Agent::manualSolve\
+(mcpp::Coordinate playerOrg, int row, int col, char** maze){
     srand(rand()); 
     int rowRand = 0; 
     int colRand = 0; 
@@ -139,7 +140,8 @@ void Agent::manualSolve(mcpp::Coordinate playerOrg, int row, int col, char** maz
     }
 }
 
-void Agent::manualSolveTest(mcpp::Coordinate playerOrg, int row, int col, char** maze){ 
+void Agent::manualSolveTest\
+(mcpp::Coordinate playerOrg, int row, int col, char** maze){ 
     double furthest = 0.0; 
     double currDist = 0.0; 
     mcpp::Coordinate farPoint(0, 0, 0); 
@@ -165,6 +167,68 @@ void Agent::manualSolveTest(mcpp::Coordinate playerOrg, int row, int col, char**
     output += " " + std::to_string(farPoint.z);
     mc.postToChat(output); 
 
+}
+
+void Agent::initialiseSolve(){ 
+    bool end = false; 
+    srand(rand()); 
+
+    while(!end){
+        if(!checkNorth()){ 
+            orientation = 3; 
+            end = true; 
+        }
+        else if (!checkEast()){ 
+            orientation = 0; 
+            end = true; 
+        }
+        else if (!checkSouth()){ 
+            orientation = 1; 
+            end = true; 
+        }
+        else if (!checkWest()){ 
+            orientation = 2; 
+            end = true; 
+        }
+        else {
+            if (rand() % 4 == 0){ 
+                currPos = currPos + MOVE_XPLUS;
+                mc.setPlayerPosition(currPos);  
+            }
+            else if (rand() % 4 == 1){ 
+                currPos = currPos + MOVE_ZPLUS;
+                mc.setPlayerPosition(currPos);   
+            }
+            else if (rand() % 4 == 2){ 
+                currPos = currPos + MOVE_XMINUS;
+                mc.setPlayerPosition(currPos);   
+            }
+            else if (rand() % 4 == 3){ 
+                currPos = currPos + MOVE_ZMINUS;
+                mc.setPlayerPosition(currPos);  
+            }
+        }
+    } 
+    mc.postToChat("Orientation: " + std::to_string(orientation % 4));
+}
+
+void Agent::initialiseSolveTest(){  
+    // bool end = false; 
+    orientation = 3; 
+    if (!checkNorth()){ 
+        orientation = 3; 
+    }
+    else if (!checkEast()){ 
+        orientation = 0;
+    }
+    else if (!checkSouth()){ 
+        orientation = 1;
+    }
+    else if (!checkWest()){ 
+        orientation = 2;
+    }
+
+    mc.postToChat("Orientation: " + std::to_string(orientation % 4)); 
 }
 
 void Agent::rightHandSolve() { 
@@ -340,7 +404,7 @@ void Agent::bfsSolve(){
         currPos = path.at(j - 1); 
         mc.setBlock(currPos, mcpp::Blocks::LIME_CARPET);
         reportStep();
-        std::this_thread::sleep_for(std::chrono::milliseconds(650));
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
     }
     mc.setBlock(currPos, mcpp::Blocks::AIR);
     mc.postToChat("Congratulations! You reached the exit!"); 
