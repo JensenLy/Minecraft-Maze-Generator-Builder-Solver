@@ -46,6 +46,7 @@ int main(int argc, char* argv[]){
     //State machine for menu        
     while (curState != ST_Exit)
     {
+        // std::this_thread::sleep_for(std::chrono::milliseconds(2000));
         if(curState == ST_Main){
             printMainMenu();
             getline(std::cin, userInput);
@@ -66,7 +67,7 @@ int main(int argc, char* argv[]){
                 curState = ST_Exit;
             }
             else{
-                std::cout << "Please select menu item with numbers 1 to 5"; 
+                std::cout << "Please select menu item with numbers 1 to 5";
             }
         }
 
@@ -93,7 +94,7 @@ int main(int argc, char* argv[]){
                     curState = ST_Main;
                 }
                 else{
-                    std::cout << "Please select menu item with numbers 1 to 3"; 
+                    std::cout << "Please select menu item with numbers 1 to 3";
                 }
             }
             else{
@@ -115,7 +116,7 @@ int main(int argc, char* argv[]){
                     curState = ST_Main;
                 }
                 else{
-                    std::cout << "Please select menu item with numbers 1 to 3"; 
+                    std::cout << "Please select menu item with numbers 1 to 3";
                 }
             }
 
@@ -160,7 +161,7 @@ int main(int argc, char* argv[]){
                     delete solve;
                 }
                 else{
-                    std::cout << "Please select menu item with numbers 1 to 3"; 
+                    std::cout << "Please select menu item with numbers 1 to 4"; 
                 }
             }
             else { // Normal mode
