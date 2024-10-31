@@ -41,7 +41,9 @@ int getMazeWidth();
 
 
 char** getMaze() const;
+std::vector<std::vector<char>> getMazeVec() const;
 mcpp::Coordinate getCord();
+void setMaze(std::vector<std::vector<char>> maze);
 
 
 

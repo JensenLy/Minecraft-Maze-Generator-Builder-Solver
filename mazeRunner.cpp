@@ -79,6 +79,7 @@ int main(int argc, char* argv[]){
                     userMaze = userMaze.ValidateUserMazeSize();
                     userMaze.ValidateUserMazeInput();
                     userMaze.printMaze();
+                    correctInput = true;
                 }
                 else if(userInput == "2"){
                     userMaze = userMaze.ValidateUserMazeSize();
@@ -88,6 +89,7 @@ int main(int argc, char* argv[]){
                     userMaze.GenerateTestMaze();
                     userMaze.carveTestMaze();
                     userMaze.printMaze();
+                    correctInput = true;
                 }
                 else if(userInput == "3"){
                     curState = ST_Main;
@@ -101,6 +103,7 @@ int main(int argc, char* argv[]){
                     userMaze = userMaze.ValidateUserMazeSize();
                     userMaze.ValidateUserMazeInput();
                     userMaze.printMaze();
+                    correctInput = true;
                 }
                 else if(userInput == "2"){
                     userMaze = userMaze.ValidateUserMazeSize();
@@ -110,6 +113,7 @@ int main(int argc, char* argv[]){
                     userMaze.GenerateRandMaze();
                     userMaze.carveMaze();
                     userMaze.printMaze();
+                    correctInput = true;
                 }
                 else if(userInput == "3"){
                     curState = ST_Main;
@@ -121,15 +125,54 @@ int main(int argc, char* argv[]){
 
         }
         else if(curState == ST_Creators){
-            std::cout << "Building maze" << std::endl;
-            m = new Maze(userMaze.getCord(), userMaze.getMazeWidth(), userMaze.getMazeHeight(), correctInput, userMaze.getMaze());
+            printBuildMaze();
+            getline(std::cin, userInput);
 
-            m->scanTerrain();
-            m->storeTerrain();
-            m->terraformTerrain();
-            m->buildMaze();
+            if (userInput == "1") {
+                if (correctInput) {
+                    std::cout << "Building Maze" << std::endl;
+                    m = new Maze(userMaze.getCord(), userMaze.getMazeWidth(),\
+                    userMaze.getMazeHeight(), correctInput, userMaze.getMaze());
+
+                    m->scanTerrain();
+                    m->storeTerrain();
+                    m->terraformTerrain();
+                    m->buildMaze();
+                    
+                    std::cout << "Built Maze" << std::endl;
+                    curState = ST_Main;
+
+                }
+                else {
+                    std::cout << "Generate maze first. Type 1 to Generate Maze" << std::endl;
+                    curState = ST_Main;
+                }
+            }
+            else if (userInput == "2") {
+                if (correctInput) {
+                    std::cout << "Building Maze" << std::endl;
+                    m = new Maze(userMaze.getCord(), userMaze.getMazeWidth(),\
+                    userMaze.getMazeHeight(), correctInput, userMaze.getMaze());
+
+                    m->scanTerrainEnhancement();
+                    m->buildMazeEnhancement();
+                    
+                    std::cout << "Built Maze" << std::endl;
+                    curState = ST_Main;
+
+                }
+                else {
+                    std::cout << "Generate maze first. Type 1 to Generate Maze" << std::endl;
+                    curState = ST_Main;
+                }
+            }
+            else if(userInput == "3"){
+                    curState = ST_Main;
+            }
+            else{
+                std::cout << "Please select menu item with numbers 1 to 3"; 
+            }
             
-            curState = ST_Main;
         }
         else if(curState == ST_SolveMaze){
             printSolveMazeMenu();
