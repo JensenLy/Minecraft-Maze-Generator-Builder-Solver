@@ -48,6 +48,8 @@ public:
     void vecRemoveDups(std::vector<mcpp::Coordinate> &vec);
     void manualSolve(mcpp::Coordinate basePoint, int row, int col, char** maze);
     void manualSolveTest(mcpp::Coordinate playerOrg, int row, int col, char** maze);
+    void initialiseSolve(); 
+    void initialiseSolveTest(); 
     void rightHandSolve(); 
     void bfsSolve(); 
 
