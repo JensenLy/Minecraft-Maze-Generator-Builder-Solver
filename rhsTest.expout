@@ -47,8 +47,16 @@ Enter Menu item to continue:
 5) Exit
 
 Enter Menu item to continue: 
-Building maze
+
+------------- BUILD MAZE -------------
+1) Normal Mode
+2) Enhancement Mode
+3) Back
+
+Enter Menu item to continue: 
+Building Maze
 Building at X: 4848, Y: 71, Z: 4369
+Built Maze
 
 ------------- MAIN MENU -------------
 1) Generate Maze
