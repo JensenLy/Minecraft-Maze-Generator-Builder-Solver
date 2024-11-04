@@ -2,15 +2,11 @@
 
     LinkedListCoordinate::LinkedListCoordinate() : head(nullptr) {}
 
-    // head = new Node();
-
     // Function to insert a new node with a coordinate and blockType object
     void LinkedListCoordinate::insert\
     (mcpp::Coordinate coordinate, mcpp::BlockType blockType) {
-        // Node* newNode = nullptr;
-        // this->coordinate = coordinate;
-        // this->blockType = blockType;
-        Node* newNode = new Node(coordinate, blockType);  // Create a new node with a coordinate and blockType object
+        // Create a new node with a coordinate and blockType object
+        Node* newNode = new Node(coordinate, blockType);  
 
         // If the list is empty, set the new node as the head
         if (head == nullptr) {
@@ -22,15 +18,12 @@
             while (temp->getnext() != nullptr) {
                 temp = temp->getnext();
             }
-
+            // Link the last node to the new node
             temp->setnext(newNode);
-                // temp->getnext() = newNode;
-                // newNode = temp->getnext();
-                 // Link the last node to the new node
         }
     }
 
-    
+    // Goes through the linkedList till a nullptr is reached
     void LinkedListCoordinate::placeback() {
       Node* temp = head;
       while (temp != nullptr) {

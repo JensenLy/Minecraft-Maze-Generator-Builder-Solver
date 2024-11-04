@@ -11,7 +11,6 @@
 #include <string>
 #include <mcpp/mcpp.h>
 #include "Maze.h"
-#include "env.h"
 
 class GenerateMaze {
 

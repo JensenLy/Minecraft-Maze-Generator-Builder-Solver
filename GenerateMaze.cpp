@@ -1,6 +1,5 @@
 #include "GenerateMaze.h"
 #include "Maze.h"
-#include "env.h"
 GenerateMaze::GenerateMaze(){}
 
 GenerateMaze::GenerateMaze(int x, int y, mcpp::Coordinate currCord){

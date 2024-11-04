@@ -42,11 +42,12 @@ private:
     int build_z;
     int tempy;
     int counter;
-    int maxheight;
+    int maxHeight;
     mcpp::Coordinate currCoord;
     mcpp::BlockType currBlock;
     mcpp::Coordinate playerOrg;
     bool EnhancementMode = false;
+    std::vector<std::vector<char>> vec;
 
 
 };
