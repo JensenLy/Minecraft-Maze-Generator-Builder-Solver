@@ -6,6 +6,7 @@
 #include <chrono>
 #include <thread>
 #include "LinkedListCoordinate.h"
+#include "GenerateMaze.h"
 
 class Maze
 {
@@ -22,7 +23,10 @@ public:
     void storeTerrain();
     void buildMaze();
     void scanTerrain();
-    
+    void buildMazeEnhancement();
+    void scanTerrainEnhancement();
+    void exitCleanUpEnhancement();
+
 private:
     /* data */
     char** maze;
@@ -38,9 +42,12 @@ private:
     int build_z;
     int tempy;
     int counter;
-    int maxheight;
+    int maxHeight;
     mcpp::Coordinate currCoord;
     mcpp::BlockType currBlock;
+    mcpp::Coordinate playerOrg;
+    bool EnhancementMode = false;
+    std::vector<std::vector<char>> vec;
 
 
 };

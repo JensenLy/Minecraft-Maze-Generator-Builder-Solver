@@ -46,6 +46,7 @@ int main(int argc, char* argv[]){
     //State machine for menu        
     while (curState != ST_Exit)
     {
+        // std::this_thread::sleep_for(std::chrono::milliseconds(2000));
         if(curState == ST_Main){
             printMainMenu();
             getline(std::cin, userInput);
@@ -66,7 +67,7 @@ int main(int argc, char* argv[]){
                 curState = ST_Exit;
             }
             else{
-                std::cout << "Please select menu item with numbers 1 to 5"; 
+                std::cout << "Please select menu item with numbers 1 to 5";
             }
         }
 
@@ -79,6 +80,7 @@ int main(int argc, char* argv[]){
                     userMaze = userMaze.ValidateUserMazeSize();
                     userMaze.ValidateUserMazeInput();
                     userMaze.printMaze();
+                    correctInput = true;
                     curState = ST_Main;
                 }
                 else if(userInput == "2"){
@@ -90,6 +92,7 @@ int main(int argc, char* argv[]){
                     userMaze.carveTestMaze();
                     userMaze.printMaze();
                     curState = ST_Main;
+                    correctInput = true;
                 }
                 else if(userInput == "3"){
                     userMaze = userMaze.ValidateUserMazeSize();
@@ -114,6 +117,7 @@ int main(int argc, char* argv[]){
                     userMaze.ValidateUserMazeInput();
                     userMaze.printMaze();
                     curState = ST_Main;
+                    correctInput = true;
                 }
                 else if(userInput == "2"){
                     userMaze = userMaze.ValidateUserMazeSize();
@@ -121,6 +125,7 @@ int main(int argc, char* argv[]){
                     userMaze.carveMaze();
                     userMaze.printMaze();
                     curState = ST_Main;
+                    correctInput = true;
                 }
                 else if(userInput == "3"){
                     userMaze = userMaze.ValidateUserMazeSize();
@@ -139,15 +144,54 @@ int main(int argc, char* argv[]){
 
         }
         else if(curState == ST_Creators){
-            std::cout << "Building maze" << std::endl;
-            m = new Maze(userMaze.getCord(), userMaze.getMazeWidth(), userMaze.getMazeHeight(), correctInput, userMaze.getMaze());
+            printBuildMaze();
+            getline(std::cin, userInput);
 
-            m->scanTerrain();
-            m->storeTerrain();
-            m->terraformTerrain();
-            m->buildMaze();
+            if (userInput == "1") {
+                if (correctInput) {
+                    std::cout << "Building Maze" << std::endl;
+                    m = new Maze(userMaze.getCord(), userMaze.getMazeWidth(),\
+                    userMaze.getMazeHeight(), correctInput, userMaze.getMaze());
+
+                    m->scanTerrain();
+                    m->storeTerrain();
+                    m->terraformTerrain();
+                    m->buildMaze();
+                    
+                    std::cout << "Built Maze" << std::endl;
+                    curState = ST_Main;
+
+                }
+                else {
+                    std::cout << "Generate maze first. Type 1 to Generate Maze" << std::endl;
+                    curState = ST_Main;
+                }
+            }
+            else if (userInput == "2") {
+                if (correctInput) {
+                    std::cout << "Building Maze" << std::endl;
+                    m = new Maze(userMaze.getCord(), userMaze.getMazeWidth(),\
+                    userMaze.getMazeHeight(), correctInput, userMaze.getMaze());
+
+                    m->scanTerrainEnhancement();
+                    m->buildMazeEnhancement();
+                    
+                    std::cout << "Built Maze" << std::endl;
+                    curState = ST_Main;
+
+                }
+                else {
+                    std::cout << "Generate maze first. Type 1 to Generate Maze" << std::endl;
+                    curState = ST_Main;
+                }
+            }
+            else if(userInput == "3"){
+                    curState = ST_Main;
+            }
+            else{
+                std::cout << "Please select menu item with numbers 1 to 3"; 
+            }
             
-            curState = ST_Main;
         }
         else if(curState == ST_SolveMaze){
             printSolveMazeMenu();
@@ -178,7 +222,7 @@ int main(int argc, char* argv[]){
                     delete solve;
                 }
                 else{
-                    std::cout << "Please select menu item with numbers 1 to 3"; 
+                    std::cout << "Please select menu item with numbers 1 to 4"; 
                 }
             }
             else { // Normal mode

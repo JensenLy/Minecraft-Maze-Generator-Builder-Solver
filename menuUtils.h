@@ -57,3 +57,13 @@ void printExitMassage(void){
     std::cout << "The End!" << std::endl;
     std::cout << std::endl;
 }
+
+void printBuildMaze(void){
+    std::cout << std::endl;
+    std::cout << "------------- BUILD MAZE -------------" << std::endl;
+    std::cout << "1) Normal Mode" << std::endl;
+    std::cout << "2) Enhancement Mode" << std::endl;
+    std::cout << "3) Back" << std::endl;
+    std::cout << std::endl;
+    std::cout << "Enter Menu item to continue: " << std::endl;
+}

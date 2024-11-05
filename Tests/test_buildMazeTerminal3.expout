@@ -1,0 +1,70 @@
+
+Welcome to MineCraft MazeRunner!
+--------------------------------
+
+------------- MAIN MENU -------------
+1) Generate Maze
+2) Build Maze in MineCraft
+3) Solve Maze
+4) Show Team Information
+5) Exit
+
+Enter Menu item to continue: 
+
+------------- GENERATE MAZE -------------
+1) Read Maze from terminal
+2) Generate Random Maze
+3) Back
+
+Enter Menu item to continue: 
+In Minecraft navigate to where you want the maze to be in Minecraft and type - done:
+Enter the length and width of maze: 
+Enter the maze structure: 
+Maze read successfully
+**Printing Maze**
+BasePoint: (4848, 71, 4369)
+Structure:
+XXXXXXX
+......X
+XXXXX.X
+X...X.X
+X.X.X.X
+X.X...X
+XXXXXXX
+**End Printing Maze**
+
+------------- GENERATE MAZE -------------
+1) Read Maze from terminal
+2) Generate Random Maze
+3) Back
+
+------------- MAIN MENU -------------
+1) Generate Maze
+2) Build Maze in MineCraft
+3) Solve Maze
+4) Show Team Information
+5) Exit
+
+Enter Menu item to continue:
+
+------------- BUILD MAZE -------------
+1) Normal Mode
+2) Enhancement Mode
+3) Back
+
+Enter Menu item to continue: 
+Building Maze
+Building at X: 4848, Y: 71, Z: 4369
+Built Maze
+
+------------- MAIN MENU -------------
+1) Generate Maze
+2) Build Maze in MineCraft
+3) Solve Maze
+4) Show Team Information
+5) Exit
+
+Enter Menu item to continue: 
+
+The End!
+

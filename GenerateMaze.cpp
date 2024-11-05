@@ -1,5 +1,5 @@
 #include "GenerateMaze.h"
-
+#include "Maze.h"
 GenerateMaze::GenerateMaze(){}
 
 GenerateMaze::GenerateMaze(int x, int y, mcpp::Coordinate currCord){
@@ -602,7 +602,7 @@ bool GenerateMaze::isValid(int x, int y, int dirX, int dirY, char isNormal){
     
     if (newX > 0 && newX < static_cast<int>(maze.size()) && newY > 0 && newY < static_cast<int>(maze[0].size())){
         if(isNormal == '1'){
-            if(maze[newX][newY] == ' '){
+            if(maze[newX][newY] == ' ' && maze[x + dirX][y + dirY] != '\\'){
                 validMove = true;
             }
         }
@@ -648,6 +648,14 @@ char** GenerateMaze::getMaze() const {
     return mazeArray;
 }
 
+std::vector<std::vector<char>> GenerateMaze::getMazeVec() const {
+    return maze;
+}
+
 mcpp::Coordinate GenerateMaze::getCord(){
     return cord;
+}
+
+void GenerateMaze::setMaze(std::vector<std::vector<char>> maze) {
+    this->maze = maze;
 }

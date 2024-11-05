@@ -1,7 +1,6 @@
 #include "Node.h"
 
-// Node::Node() : next(nullptr) {}  // Always initialize next to nullptr
-
+// Assigns the c to coordinate and b to blockType
 Node::Node(mcpp::Coordinate c, mcpp::BlockType b) {
     this->coordinate = c;
     this->blockType = b;
