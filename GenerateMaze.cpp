@@ -1,6 +1,5 @@
 #include "GenerateMaze.h"
-#include "Maze.h"
-#include "env.h"
+
 GenerateMaze::GenerateMaze(){}
 
 GenerateMaze::GenerateMaze(int x, int y, mcpp::Coordinate currCord){
@@ -13,13 +12,6 @@ GenerateMaze::GenerateMaze(int x, int y, mcpp::Coordinate currCord){
     
 }
 
-// GenerateMaze::~GenerateMaze() {
-//     for (int i = 0; i < width; ++i) {
-//         delete[] maze[i];
-//     }
-//     delete[] maze;
-// }
-
 GenerateMaze GenerateMaze::ValidateUserMazeSize(){
     bool isDone = false; 
     bool correctInput = false;
@@ -28,32 +20,37 @@ GenerateMaze GenerateMaze::ValidateUserMazeSize(){
     mcpp::Coordinate playerOrg;
     std::string doneInput;
 
-    std::cout << "In Minecraft navigate to where you want the maze to be in Minecraft and type - done:" << std::endl;
+    std::cout << "In Minecraft navigate to where you want the maze to be in "
+    << "Minecraft and type - done:" << std::endl;
     std::cin >> doneInput;
 
+    //While the user does not input "done"
     while(!isDone){
         if(doneInput == "done"){
             isDone = true;
         }
         else{
-            std::cout << "In Minecraft navigate to where you want the maze to be in Minecraft and type - done:" << std::endl;
+            std::cout << "In Minecraft navigate to where you want the maze to "
+            << "be in Minecraft and type - done:" << std::endl;
             std::cin >> doneInput;
         }
     }
 
+    //Clear any extra user inputs from buffer
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
+    //Get the players position in Mineraft they want to build the maze
     playerOrg = mc.getPlayerPosition();
     playerOrg.y = (mc.getHeight(playerOrg.x, playerOrg.z))+1;
 
     std::cout << "Enter the length and width of maze" << std::endl;
 
+    //Check the user entered exactly 2 odd int's otherwise prompt them again
     while(!correctInput){
         std::string whInput;
         std::getline(std::cin, whInput);
 
         std::istringstream iss(whInput);
-        // Check if exactly two integers were entered
         int x, y;
         if (iss >> x >> y) {
             if (x % 2 != 0 && y % 2 != 0 && x > 0 && y > 0) {
@@ -62,13 +59,20 @@ GenerateMaze GenerateMaze::ValidateUserMazeSize(){
                 userY = y;
 
             } else {
-                std::cout << "Please enter 2 **odd** values greater than 0 for the length and width of the maze." << std::endl;
+                std::cout << "Please enter 2 **odd** values greater than 0 for "
+                << "the length and width of the maze." << std::endl;
             }
         } else {
-            std::cout << "Invalid input. Please enter two integer values." << std::endl;
+            std::cout << "Invalid input. Please enter two integer"
+            << " values." << std::endl;
         }
     }
 
+    /* 
+     * Once validated the user's input, call the constructor and create the
+     * GenerateMaze object to return to mazeRunner and associate with the user's
+     * Maze.
+     */
     return GenerateMaze(userX, userY, playerOrg);
 
 }
@@ -82,8 +86,8 @@ void GenerateMaze::ValidateUserMazeInput() {
 
     std::cout << "Enter the maze structure (only 'X' and '.'): " << std::endl;
 
+    //For each line the user input's check it is correct length and only 'X'&'.'
     for (int i = 0; i < x; i++) {
-        // Reset for each row
         isValidInput = false;
 
         while (!isValidInput) {
@@ -91,16 +95,17 @@ void GenerateMaze::ValidateUserMazeInput() {
 
             // Check input length
             if (userInput.size() != static_cast<size_t>(y)) {
-                std::cout << "Please enter exactly " << y << " characters." << std::endl;
+                std::cout << "Please enter exactly " << y << " characters." 
+                << std::endl;
             } else {
                 // Assume input is valid, check each character
                 isValidInput = true;
 
                 for (char c : userInput) {
                     if (c != 'X' && c != '.') {
-                        std::cout << "Please enter only 'X' and '.' for the maze structure." << std::endl;
+                        std::cout << "Please enter only 'X' and '.' for the"
+                        << " maze structure." << std::endl;
                         isValidInput = false;  // Mark input as invalid
-                        // No `break` needed; just let the loop continue to next character
                     }
                 }
 
@@ -117,9 +122,241 @@ void GenerateMaze::ValidateUserMazeInput() {
     std::cout << "Maze read successfully." << std::endl;
 }
 
+void GenerateMaze::fixUserInput(){
+    char fixedIso = this->removeIsolation();
+    bool noProblems = false;
+
+    if(fixedIso == '0'){
+        noProblems = true;
+    }
+
+    while(fixedIso != '0' && fixedIso != '2'){
+        fixedIso = this->removeIsolation();
+
+        if(fixedIso == '0'){
+        std::cout << "Isolations in your maze have been fixed!" << std::endl;
+        }
+    }
+
+    char fixedLoop = this->removeLoop();
+
+    if(noProblems && fixedLoop == '0'){
+        std::cout << "Your maze has no problems!" << std::endl;
+    }
+
+    while(fixedLoop != '0' && fixedLoop != '2'){
+        fixedLoop = this->removeLoop();
+
+        if(fixedLoop == '0'){
+        std::cout << "Loops in your maze have been fixed!" << std::endl;
+        }
+    }
+
+    if(fixedIso == '2' || fixedLoop == '2'){
+        std::cout << "Your maze cannot be completely fixed!" << std::endl;
+    }
+
+    this->printMaze();
+
+}
+
+char GenerateMaze::removeIsolation(){
+
+    std::array<int, 2> entrance = this->findEntrance();
+    std::vector<std::vector<char>> floodedMaze = this->floodFill(entrance, '.');
+
+    int x = maze.size();
+    int y = maze[1].size();
+    int randChoice;
+    int dirX = 0;
+    int dirY = 0;
+    int moveX;
+    int moveY;
+    char foundIsolation = '0';
+    int i = 0;
+
+    while(foundIsolation == '0' && i < x){
+        for(int j = 0; j < y; j++){
+            if(floodedMaze[i][j] == '.'){
+                randChoice = randomMove(i, j, '0');
+
+                // UP
+                if(randChoice == 1){
+                    dirX = -1;
+                    dirY = 0;
+                }
+                // RIGHT
+                else if(randChoice == 2){
+                    dirX = 0;
+                    dirY = 1;
+                }
+                // DOWN
+                else if(randChoice == 3){
+                    dirX = 1;
+                    dirY = 0;
+                }
+                // LEFT
+                else if(randChoice == 4){
+                    dirX = 0;
+                    dirY = -1;
+                }
+
+                if(randChoice != 0){
+                    moveX = dirX*2 + i;
+                    moveY = dirY*2 + j;
+
+                    maze[dirX+i][dirY+j] = '.';
+                    maze[moveX][moveY] = '.';
+                    foundIsolation = 1;
+                }
+                else{
+                    foundIsolation = '2';
+                }
+
+            }
+        }
+        i++;
+    }
+
+    return foundIsolation;
+}
+
+char GenerateMaze::removeLoop(){
+
+    std::array<int, 2> entrance = {0, 0};
+    std::vector<std::vector<char>> floodedMaze = this->floodFill(entrance, 'X');
+
+    int x = maze.size();
+    int y = maze[1].size();
+    int randChoice;
+    int dirX = 0;
+    int dirY = 0;
+    int moveX;
+    int moveY;
+    char foundIsolation = '0';
+    int i = 0;
+
+    while(foundIsolation == '0' && i < x){
+        for(int j = 0; j < y; j++){
+            if(floodedMaze[i][j] == 'X'){
+                randChoice = randomMove(i, j, '2');
+
+                // UP
+                if(randChoice == 1){
+                    dirX = -1;
+                    dirY = 0;
+                }
+                // RIGHT
+                else if(randChoice == 2){
+                    dirX = 0;
+                    dirY = 1;
+                }
+                // DOWN
+                else if(randChoice == 3){
+                    dirX = 1;
+                    dirY = 0;
+                }
+                // LEFT
+                else if(randChoice == 4){
+                    dirX = 0;
+                    dirY = -1;
+                }
+
+                if(randChoice != 0){
+                    moveX = dirX*2 + i;
+                    moveY = dirY*2 + j;
+
+                    maze[dirX+i][dirY+j] = 'X';
+                    maze[moveX][moveY] = 'X';
+                    foundIsolation = '1';
+                }
+                else{
+                    foundIsolation = '2';
+                }
+
+            }
+        }
+        i++;
+    }
+
+    return foundIsolation;
+
+}
+
+std::vector<std::vector<char>> GenerateMaze::floodFill(std::array<int, 2> start,
+char search) {
+    // Create a copy of the maze to work with
+    std::vector<std::vector<char>> floodedMaze = maze;
+
+    // Get the starting coordinates
+    int startX = start[0];
+    int startY = start[1];
+
+    floodFillHelper(floodedMaze, startX, startY, search);
+
+    int x = maze.size();
+    int y = maze[1].size();
+
+    for(int i = 0; i < x; i++){
+        for(int j = 0; j < y; j++){
+            std::cout << floodedMaze[i][j];
+        }
+        std::cout << std::endl;
+    }
+
+    return floodedMaze;
+}       
+
+void GenerateMaze::floodFillHelper(std::vector<std::vector<char>>& floodedMaze, 
+int x, int y, char search) {
+    // Initialize a flag to control recursion
+    bool shouldContinue = true;
+
+    // Check boundary conditions and whether the current cell matches the search character
+    if (x < 0 || x >= static_cast<int>(floodedMaze.size()) || y < 0 ||
+        y >= static_cast<int>(floodedMaze[0].size())) {
+        shouldContinue = false;
+    } else if (floodedMaze[x][y] != search) {
+        shouldContinue = false;
+    }
+
+    if (shouldContinue) {
+        // Replace the character with '0'
+        floodedMaze[x][y] = '0';
+
+        // Recursively call flood fill on neighboring cells
+        floodFillHelper(floodedMaze, x + 1, y, search);
+        floodFillHelper(floodedMaze, x - 1, y, search);
+        floodFillHelper(floodedMaze, x, y + 1, search);
+        floodFillHelper(floodedMaze, x, y - 1, search);
+    }
+    // Only one return statement at the end (implicit for void function)
+}
+
+std::array<int, 2> GenerateMaze::findEntrance(){
+    std::array<int, 2> entrance = {0,0};
+
+    for(int i = 0; i < width; i++){
+        if(maze[i][0] == '.'){
+            entrance[0] = i;
+        }
+        else if(maze[i][height-1] == '.'){
+            entrance[0] = i;
+            entrance[1] = height-1;
+        }    
+    }
+
+    return entrance;
+
+}
+
 void GenerateMaze::printMaze(){
     int x = maze.size();
     int y = maze[1].size();
+
+    std::cout << "**Printing Fixed Maze**" << std::endl;
+    std::cout << "Base Point: " << cord << std::endl;
+    std::cout << "Structure: "  << std::endl;
 
     for(int i = 0; i < x; i++){
         for(int j = 0; j < y; j++){
@@ -127,6 +364,8 @@ void GenerateMaze::printMaze(){
         }
         std::cout << std::endl;
     }
+
+    std::cout << "**End Printing Maze**" << std::endl;
 }
 
 void GenerateMaze::GenerateRandMaze(){
@@ -211,7 +450,7 @@ void GenerateMaze::carveMaze(){
    pathWay.push_back(currLoc);
 
     while(!pathWay.empty()){
-        int randChoice = randomMove(currLoc[0], currLoc[1]);
+        int randChoice = randomMove(currLoc[0], currLoc[1], true);
 
         int dirX = 0, dirY = 0;
 
@@ -290,7 +529,7 @@ void GenerateMaze::carveTestMaze(){
                 dirY = -1;
             }
 
-            if (isValid(currLoc[0], currLoc[1], dirX, dirY)) {
+            if (isValid(currLoc[0], currLoc[1], dirX, dirY, true)) {
                 // Carve the wall between current and next cell
                 maze[currLoc[0] + dirX][currLoc[1] + dirY] = '.';
 
@@ -319,31 +558,30 @@ void GenerateMaze::carveTestMaze(){
 
 }
 
-int GenerateMaze::randomMove(int x, int y){
+int GenerateMaze::randomMove(int x, int y, char isNormal){
     std::vector<int> validMoves;
     //Get the curr location and for each up down etc check if they are valid. 
 
     // Move up
-    if(isValid(x, y, -1, 0)){
+    if(isValid(x, y, -1, 0, isNormal)){
         validMoves.push_back(1);
     }
     // Move right
-    if(isValid(x, y, 0, 1)){
+    if(isValid(x, y, 0, 1, isNormal)){
         validMoves.push_back(2);
     }
     // Move down
-    if(isValid(x, y, 1, 0)){
+    if(isValid(x, y, 1, 0, isNormal)){
         validMoves.push_back(3);
     }
     // Move left
-    if(isValid(x, y, 0, -1)){
+    if(isValid(x, y, 0, -1, isNormal)){
         validMoves.push_back(4);
     }
 
     if(validMoves.empty()){
-        //Move back to previouse path
+        //No Valid moves
         validMoves.push_back(0);
-
     }
 
     //Shuffel the vector to get a random move
@@ -356,15 +594,27 @@ int GenerateMaze::randomMove(int x, int y){
     return validMoves[0];
 }
 
-bool GenerateMaze::isValid(int x, int y, int dirX, int dirY){
+bool GenerateMaze::isValid(int x, int y, int dirX, int dirY, char isNormal){
     bool validMove = false;
 
     int newX = x + 2 * dirX;
     int newY = y + 2 * dirY;
     
     if (newX > 0 && newX < static_cast<int>(maze.size()) && newY > 0 && newY < static_cast<int>(maze[0].size())){
-        if(maze[newX][newY] == ' '){
-            validMove = true;
+        if(isNormal == '1'){
+            if(maze[newX][newY] == ' '){
+                validMove = true;
+            }
+        }
+        else if(isNormal == '0'){
+            if(maze[newX][newY] == '.'){
+                validMove = true;
+            }
+        }
+        else if(isNormal == '2'){
+            if(maze[newX][newY] == 'X'){
+                validMove = true;
+            }
         }
     }
 

@@ -75,10 +75,11 @@ int main(int argc, char* argv[]){
             getline(std::cin, userInput);
             
             if(mode){
-                    if(userInput == "1"){
+                if(userInput == "1"){
                     userMaze = userMaze.ValidateUserMazeSize();
                     userMaze.ValidateUserMazeInput();
                     userMaze.printMaze();
+                    curState = ST_Main;
                 }
                 else if(userInput == "2"){
                     userMaze = userMaze.ValidateUserMazeSize();
@@ -88,12 +89,23 @@ int main(int argc, char* argv[]){
                     userMaze.GenerateTestMaze();
                     userMaze.carveTestMaze();
                     userMaze.printMaze();
+                    curState = ST_Main;
                 }
                 else if(userInput == "3"){
+                    userMaze = userMaze.ValidateUserMazeSize();
+                    userMaze.ValidateUserMazeInput();
+                    std::array<int, 2> entrance = userMaze.findEntrance();
+                    userMaze.floodFill(entrance, '.');
+                    userMaze.printMaze();
+
+                    userMaze.printMaze();
+                    curState = ST_Main;
+                }
+                else if(userInput == "4"){
                     curState = ST_Main;
                 }
                 else{
-                    std::cout << "Please select menu item with numbers 1 to 3"; 
+                    std::cout << "Please select menu item with numbers 1 to 4"; 
                 }
             }
             else{
@@ -101,21 +113,27 @@ int main(int argc, char* argv[]){
                     userMaze = userMaze.ValidateUserMazeSize();
                     userMaze.ValidateUserMazeInput();
                     userMaze.printMaze();
+                    curState = ST_Main;
                 }
                 else if(userInput == "2"){
                     userMaze = userMaze.ValidateUserMazeSize();
-                    std::cout << "***Printing Maze***" << std::endl;
-                    std::cout << "Base Point: " << userMaze.getCord() << std::endl;
-                    std::cout << "Structure: "  << std::endl;
                     userMaze.GenerateRandMaze();
                     userMaze.carveMaze();
                     userMaze.printMaze();
+                    curState = ST_Main;
                 }
                 else if(userInput == "3"){
+                    userMaze = userMaze.ValidateUserMazeSize();
+                    userMaze.ValidateUserMazeInput();
+                    userMaze.fixUserInput();
+
+                    curState = ST_Main;
+                }
+                else if(userInput == "4"){
                     curState = ST_Main;
                 }
                 else{
-                    std::cout << "Please select menu item with numbers 1 to 3"; 
+                    std::cout << "Please select menu item with numbers 1 to 4"; 
                 }
             }
 

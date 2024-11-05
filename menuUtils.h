@@ -23,7 +23,8 @@ void printGenerateMazeMenu(void){
     std::cout << "------------- GENERATE MAZE -------------" << std::endl;
     std::cout << "1) Read Maze from terminal" << std::endl;
     std::cout << "2) Generate Random Maze" << std::endl;
-    std::cout << "3) Back" << std::endl;
+    std::cout << "3) Read Maze from terminal and validate it to be a perfect maze" << std::endl;
+    std::cout << "4) Back" << std::endl;
     std::cout << std::endl;
     std::cout << "Enter Menu item to continue: " << std::endl;
 }
@@ -44,11 +45,9 @@ void printTeamInfo(void){
     std::cout << std::endl;
     std::cout << "Team members:" << std::endl;
 
-    //TODO: change this part to reflect your team**********
     std::cout << "\t [1] Kien Hung Ly (s3977367@student.rmit.edu.au)" << std::endl;
     std::cout << "\t [2] Nathan Yong (s4090456@student.rmit.edu.au)" << std::endl;
-    std::cout << "\t [2] Steven Korevaar (steven.korevaar@rmit.edu.au)" << std::endl;
-    //*************
+    std::cout << "\t [3] Talin Russo-Christoffelsz (s4106649@student.rmit.edu.au)" << std::endl;
 
     std::cout << std::endl;
 }
