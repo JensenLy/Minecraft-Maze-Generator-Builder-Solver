@@ -448,9 +448,10 @@ void GenerateMaze::GenerateTestMaze(){
 
 void GenerateMaze::carveMaze(){
    pathWay.push_back(currLoc);
+   char validMode = '1';
 
     while(!pathWay.empty()){
-        int randChoice = randomMove(currLoc[0], currLoc[1], true);
+        int randChoice = randomMove(currLoc[0], currLoc[1], validMode);
 
         int dirX = 0, dirY = 0;
 
@@ -499,6 +500,7 @@ void GenerateMaze::carveMaze(){
 
 void GenerateMaze::carveTestMaze(){
     pathWay.push_back(currLoc);
+    char validMode = '1';
 
     while(!pathWay.empty()){
         bool moved = false;
@@ -529,7 +531,7 @@ void GenerateMaze::carveTestMaze(){
                 dirY = -1;
             }
 
-            if (isValid(currLoc[0], currLoc[1], dirX, dirY, true)) {
+            if (isValid(currLoc[0], currLoc[1], dirX, dirY, validMode)) {
                 // Carve the wall between current and next cell
                 maze[currLoc[0] + dirX][currLoc[1] + dirY] = '.';
 
