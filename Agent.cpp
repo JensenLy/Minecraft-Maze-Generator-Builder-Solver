@@ -176,16 +176,15 @@ void Agent::manualSolveTest\
         }
     }
 
-    mcpp::Coordinate tempPos = playerOrg + farPoint; 
-    tempPos.y = mc.getHeight(tempPos.x, tempPos.z); 
-    mc.setPlayerTilePosition(tempPos);
     farPoint = playerOrg + farPoint; 
+    mc.setPlayerTilePosition(farPoint);
     std::string output = "Teleported to: "; 
     output += std::to_string(farPoint.x); 
     output += " " + std::to_string(farPoint.y);
     output += " " + std::to_string(farPoint.z);
     std::cout << output << std::endl; 
 
+    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 }
 
 void Agent::initialiseSolve(){ 
@@ -384,6 +383,10 @@ void Agent::bfsSolve(){
     int i = 0; 
     bool isVisited = false; 
     mcpp::Coordinate tempPos; 
+    mcpp::Coordinate tempXPlus; 
+    mcpp::Coordinate tempZPlus; 
+    mcpp::Coordinate tempXMinus; 
+    mcpp::Coordinate tempZMinus; 
     std::vector<mcpp::Coordinate> queue; 
     queue.push_back(currPos); 
     std::vector<mcpp::Coordinate> visited; 
@@ -446,24 +449,36 @@ void Agent::bfsSolve(){
         mc.setBlock(visited.at(j), mcpp::Blocks::AIR);
     }
 
-    mc.postToChat("Setting the escape path"); 
+    mc.postToChat("Setting the escape path, WAIT for the lime carpet."); 
 
     for (size_t j = visited.size(); j > 0; j--) { // Trace path
-        if (currPos + MOVE_XPLUS == visited.at(j - 1)) { 
+        tempXPlus = currPos + MOVE_XPLUS; 
+        tempXPlus.y = mc.getHeight(tempXPlus.x, tempXPlus.z) + 1; 
+
+        tempZPlus = currPos + MOVE_ZPLUS; 
+        tempZPlus.y = mc.getHeight(tempZPlus.x, tempZPlus.z) + 1;
+
+        tempXMinus = currPos + MOVE_XMINUS; 
+        tempXMinus.y = mc.getHeight(tempXMinus.x, tempXMinus.z) + 1;
+
+        tempZMinus = currPos + MOVE_ZMINUS; 
+        tempZMinus.y = mc.getHeight(tempZMinus.x, tempZMinus.z) + 1;
+
+        if (tempXPlus == visited.at(j - 1)) { 
             path.push_back(currPos);
-            currPos = currPos + MOVE_XPLUS; 
+            currPos = tempXPlus; 
         }
-        else if (currPos + MOVE_ZPLUS == visited.at(j - 1)) { 
+        else if (tempZPlus == visited.at(j - 1)) { 
             path.push_back(currPos);
-            currPos = currPos + MOVE_ZPLUS; 
+            currPos = tempZPlus;
         }
-        else if (currPos + MOVE_XMINUS == visited.at(j - 1)) { 
+        else if (tempXMinus == visited.at(j - 1)) { 
             path.push_back(currPos);
-            currPos = currPos + MOVE_XMINUS; 
+            currPos = tempXMinus;
         }
-        else if (currPos + MOVE_ZMINUS == visited.at(j - 1)) { 
+        else if (tempZMinus == visited.at(j - 1)) { 
             path.push_back(currPos);
-            currPos = currPos + MOVE_ZMINUS; 
+            currPos = tempZMinus;
         }
         path.push_back(currPos);
     }
