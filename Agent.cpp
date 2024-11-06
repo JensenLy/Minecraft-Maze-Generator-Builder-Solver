@@ -1,6 +1,6 @@
 #include "Agent.h"
 
-Agent::Agent(/*mcpp::Coordinate startLoc*/)
+Agent::Agent()
 {
     step = 0; 
     orientation = 0; 
@@ -13,12 +13,22 @@ Agent::~Agent()
 }
 
 bool Agent::checkNorth(mcpp::BlockType block) {
+    // Checks the tile on the X-Positive, if it's the same as the one on the
+    // parameter, returns false (which means it's a wall, not free to move),
+    // otherwises returns true (which means clear, free to move); 
     bool clear = false; 
     mcpp::BlockType tempBlock; 
+
+    // move the temporary position on X-Positive
     mcpp::Coordinate tempPos = currPos + MOVE_XPLUS; 
+
+    // getHeight is used for dealing with uneven surfaces. 
     tempPos.y = mc.getHeight(tempPos.x, tempPos.z);
+
+    // get the blocktype
     tempBlock = mc.getBlock(tempPos); 
 
+    // comparison
     if (tempBlock != block){
         clear = true;  
     }
@@ -26,6 +36,7 @@ bool Agent::checkNorth(mcpp::BlockType block) {
 }
 
 bool Agent::checkEast(mcpp::BlockType block) {
+    // same as checkNorth(), just Z-Positive instead of X-Positive
     bool clear = false; 
     mcpp::BlockType tempBlock; 
     mcpp::Coordinate tempPos = currPos + MOVE_ZPLUS; 
@@ -40,6 +51,7 @@ bool Agent::checkEast(mcpp::BlockType block) {
 }
 
 bool Agent::checkSouth(mcpp::BlockType block) {
+    // same as checkNorth(), just X-Negative instead of X-Positive
     bool clear = false; 
     mcpp::BlockType tempBlock; 
     mcpp::Coordinate tempPos = currPos + MOVE_XMINUS; 
@@ -54,6 +66,7 @@ bool Agent::checkSouth(mcpp::BlockType block) {
 }
 
 bool Agent::checkWest(mcpp::BlockType block) {
+    // same as checkNorth(), just Z-Negative instead of X-Positive
     bool clear = false; 
     mcpp::BlockType tempBlock; 
     mcpp::Coordinate tempPos = currPos + MOVE_ZMINUS; 
@@ -69,11 +82,15 @@ bool Agent::checkWest(mcpp::BlockType block) {
 void Agent::goNorth() { 
     mc.setBlock(currPos, mcpp::Blocks::AIR); // clear the current lime carpet
     currPos = currPos + MOVE_XPLUS; // step 
-    currPos.y = mc.getHeight(currPos.x, currPos.z) + 1; 
+
+    // getHeight for uneven surfaces
+    currPos.y = mc.getHeight(currPos.x, currPos.z) + 1;
+
     mc.setBlock(currPos, mcpp::Blocks::LIME_CARPET); // place the new carpet
 } 
 
 void Agent::goEast() {
+    // same as goNorth(), just Z-Positive instead of X-Positive
     mc.setBlock(currPos, mcpp::Blocks::AIR);
     currPos = currPos + MOVE_ZPLUS; 
     currPos.y = mc.getHeight(currPos.x, currPos.z) + 1; 
@@ -81,6 +98,7 @@ void Agent::goEast() {
 }
 
 void Agent::goSouth() {
+    // same as goNorth(), just X-Negative instead of X-Positive
     mc.setBlock(currPos, mcpp::Blocks::AIR);
     currPos = currPos + MOVE_XMINUS; 
     currPos.y = mc.getHeight(currPos.x, currPos.z) + 1; 
@@ -88,13 +106,15 @@ void Agent::goSouth() {
 }
 
 void Agent::goWest() {
+    // same as goNorth(), just Z-Negative instead of X-Positive
     mc.setBlock(currPos, mcpp::Blocks::AIR);
     currPos = currPos + MOVE_ZMINUS; 
     currPos.y = mc.getHeight(currPos.x, currPos.z) + 1; 
     mc.setBlock(currPos, mcpp::Blocks::LIME_CARPET);
 }
 
-void Agent::reportStep() { 
+void Agent::reportStep() {
+    // Prints the current step, coordinate of currPos
     step++; 
     std::string reportStep = "Step[" + std::to_string(step) + "]:"; 
     reportStep += " (" + std::to_string(currPos.x);
@@ -106,15 +126,18 @@ void Agent::reportStep() {
 bool Agent::isDone() { 
     // returns true when there's a blue carpet around the current position. 
     bool isDone = false; 
-    mcpp::Coordinate tempPos;
 
-    tempPos = currPos + MOVE_XPLUS; 
+    // tempPos is used for getHeight,
+    // which is used for uneven surfaces. 
+    mcpp::Coordinate tempPos; 
+
+    tempPos = currPos + MOVE_XPLUS; //step on the X-Positive
     tempPos.y = mc.getHeight(tempPos.x, tempPos.z) + 1; 
-    if (mc.getBlock(tempPos) == mcpp::Blocks::BLUE_CARPET){
+    if (mc.getBlock(tempPos) == mcpp::Blocks::BLUE_CARPET){ //checks for blue
         isDone = true;  
     }
 
-    tempPos = currPos + MOVE_ZPLUS; 
+    tempPos = currPos + MOVE_ZPLUS; //similar as above
     tempPos.y = mc.getHeight(tempPos.x, tempPos.z) + 1; 
     if (mc.getBlock(tempPos) == mcpp::Blocks::BLUE_CARPET){
         isDone = true; 
@@ -141,17 +164,24 @@ void Agent::vecRemoveDups(std::vector<mcpp::Coordinate> &vec){
 
 void Agent::manualSolve\
 (mcpp::Coordinate playerOrg, int row, int col, char** maze){
+    // random seed for more randomness (I know it's not true random :'> )
     srand(rand()); 
     int rowRand = 0; 
     int colRand = 0; 
     while (keepGoing){ 
-        rowRand = rand() % row; 
-        colRand = rand() % col; 
+        rowRand = rand() % row; // random range from 0 to row
+        colRand = rand() % col; // random range from 0 to column
 
-        if (maze[rowRand][colRand] == '.') { 
+        if (maze[rowRand][colRand] == '.') { // checks if it is a wall or not
             keepGoing = false; 
+
+            // Set the coord for teleporting.
+            // The results = current coord of the player + the point relative 
+            // to (0,0) in the structure of the maze. 
+            // getHeight also for uneven surfaces shenanigans 
             currPos = playerOrg + mcpp::Coordinate(rowRand, 0 , colRand);
-            currPos.y = mc.getHeight(currPos.x, currPos.z); 
+            currPos.y = mc.getHeight(currPos.x, currPos.z);
+
             mc.setPlayerTilePosition(currPos); 
         }
     }
@@ -163,27 +193,36 @@ void Agent::manualSolveTest\
     double currDist = 0.0; 
     mcpp::Coordinate farPoint(0, 0, 0); 
 
+    // this function will uses the formula to calculate the distance between
+    // 2 points: sqrt((x2 – x1)^2 + (y2 – y1)^2)
+    // But since the base point of the maze structure is (0,0), I simplified
+    // it to sqrt(x^2 + y^2)
     for (int i = 0; i < row; i++){ 
         for (int j = 0; j < col; j++){ 
             if (maze[i][j] == '.'){ 
-                currDist = sqrt(i * i + j * j);  
+                currDist = sqrt(i * i + j * j); // sqrt(x^2 + y^2)
             }
 
-            if (currDist > furthest){
+            if (currDist > furthest){ // compare to get the furthest distance
                 furthest = currDist; 
+                // the coord of the furthest point relative to the maze
                 farPoint = mcpp::Coordinate(i, 0, j); 
             }
         }
     }
 
+    // combine playerOrg and farPoint to get the coord for teleporting
     farPoint = playerOrg + farPoint; 
     mc.setPlayerTilePosition(farPoint);
+
+    // Report the coord the player teleports to (via minecraft chat)
     std::string output = "Teleported to: "; 
     output += std::to_string(farPoint.x); 
     output += " " + std::to_string(farPoint.y);
     output += " " + std::to_string(farPoint.z);
     std::cout << output << std::endl; 
 
+    // a second delay for the player to safely fall on the ground before solving
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 }
 
@@ -239,7 +278,6 @@ void Agent::initialiseSolve(){
             }
         }
     } 
-    mc.postToChat("Orientation: " + std::to_string(orientation % 4));
 }
 
 void Agent::initialiseSolveTest(){  
@@ -259,8 +297,6 @@ void Agent::initialiseSolveTest(){
     else if (!checkWest(acacia)){ 
         orientation = 2;
     }
-
-    mc.postToChat("Orientation: " + std::to_string(orientation % 4));
 }
 
 void Agent::rightHandSolve() { 
@@ -273,16 +309,9 @@ void Agent::rightHandSolve() {
     origPos += " " + std::to_string(currPos.z);
     mc.postToChat(origPos);
 
-    mc.postToChat("Follow the Lime Carpet");
+    mc.postToChat("FOLLOW the Lime Carpet");
 
     while (keepGoing){ 
-        // In the wall follower solving, I use an integer named "orientation"
-        // to indicate where the player is facing (the front, not right hand).
-        // For each step, I check the current position's (currPos) right, 
-        // front, back, and left respectively and take a step if there's 
-        // a free space (since it's right-hand wall follower so I have to
-        // prioritise/check the right hand side first). 
-
         // In this context: 
         //  - North means X-positive/X-plus
         //  - East means Z-positive/Z-plus
@@ -379,6 +408,7 @@ void Agent::rightHandSolve() {
 } 
 
 void Agent::bfsSolve(){ 
+    // this getHeight is to prevent the solver from starting mid-air
     currPos.y = mc.getHeight(currPos.x, currPos.z) + 1;
     int i = 0; 
     bool isVisited = false; 
@@ -402,49 +432,54 @@ void Agent::bfsSolve(){
             }
         }
 
-        if (!isVisited){
-            tempPos = queue[i] + MOVE_XPLUS; 
+        if (!isVisited){ 
+            // add the coord of the tile to "queue" vector if the next step
+            // is not Acacia Wood Plank (called acacia in Agent) 
+            tempPos = queue[i] + MOVE_XPLUS; // next step to X-positive
             tempPos.y = mc.getHeight(tempPos.x, tempPos.z); 
-            if (mc.getBlock(tempPos) != acacia) {
+            if (mc.getBlock(tempPos) != acacia) { 
                 tempPos.y += 1;  
                 queue.push_back(tempPos); 
             }
 
-            tempPos = queue[i] + MOVE_ZPLUS; 
+            tempPos = queue[i] + MOVE_ZPLUS; // next step to Z-positive
             tempPos.y = mc.getHeight(tempPos.x, tempPos.z);
             if (mc.getBlock(tempPos) != acacia) {
                 tempPos.y += 1;
                 queue.push_back(tempPos); 
             }
 
-            tempPos = queue[i] + MOVE_XMINUS; 
+            tempPos = queue[i] + MOVE_XMINUS; // next step to X-negative
             tempPos.y = mc.getHeight(tempPos.x, tempPos.z);
             if (mc.getBlock(tempPos) != acacia) {
                 tempPos.y += 1;
                 queue.push_back(tempPos); 
             }
 
-            tempPos = queue[i] + MOVE_ZMINUS; 
+            tempPos = queue[i] + MOVE_ZMINUS; // next step to Z-negative
             tempPos.y = mc.getHeight(tempPos.x, tempPos.z);
             if (mc.getBlock(tempPos) != acacia) {
                 tempPos.y += 1;
                 queue.push_back(tempPos); 
             }
 
+            // move to the current tile in queue by placing a white carpet
             mc.setBlock(queue.at(i), mcpp::Blocks::WHITE_CARPET);
+            // add that tile to "visited" vector
             visited.push_back(queue.at(i));
-
+            // set the current Position to that tile
             currPos = queue.at(i);
 
-            if (isDone()) { 
+            if (isDone()) { // the same isDone() as rightHandSolve()
                 keepGoing = false; 
                 mc.postToChat("BFS Completed"); 
                 mc.setBlock(currPos, mcpp::Blocks:: WHITE_CARPET);
             }
         }
-        i++; 
+        i++; // move to the next item in queue. 
     }
 
+    // clear the white carpets
     for (size_t j = 0; j < visited.size(); j++) {
         mc.setBlock(visited.at(j), mcpp::Blocks::AIR);
     }
@@ -452,6 +487,8 @@ void Agent::bfsSolve(){
     mc.postToChat("Setting the escape path, WAIT for the lime carpet."); 
 
     for (size_t j = visited.size(); j > 0; j--) { // Trace path
+        // all the temps here have only 1 purpose: which is to use getHeight,
+        // which is for making the algorithm works with uneven surfaces
         tempXPlus = currPos + MOVE_XPLUS; 
         tempXPlus.y = mc.getHeight(tempXPlus.x, tempXPlus.z) + 1; 
 
@@ -464,6 +501,9 @@ void Agent::bfsSolve(){
         tempZMinus = currPos + MOVE_ZMINUS; 
         tempZMinus.y = mc.getHeight(tempZMinus.x, tempZMinus.z) + 1;
 
+        // this is similar to the breadth first search, but going backwards
+        // from the finish line (blue carpet), and only allowed to step on 
+        // the tiles in "visited" vector
         if (tempXPlus == visited.at(j - 1)) { 
             path.push_back(currPos);
             currPos = tempXPlus; 
@@ -480,11 +520,14 @@ void Agent::bfsSolve(){
             path.push_back(currPos);
             currPos = tempZMinus;
         }
+        // at the steps into "path" vector for displaying the lime carpet
         path.push_back(currPos);
     }
 
     vecRemoveDups(path); 
-    mc.postToChat("Follow the lime carpet");
+    mc.postToChat("FOLLOW the lime carpet");
+
+    // show the lime carpet path (similar as shown in rightHandSolve)
     for (size_t j = path.size(); j > 0; j--){ 
         mc.setBlock(currPos, mcpp::Blocks::AIR);
         currPos = path.at(j - 1); 
@@ -492,6 +535,6 @@ void Agent::bfsSolve(){
         reportStep();
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
     }
-    mc.setBlock(currPos, mcpp::Blocks::AIR);
+    mc.setBlock(currPos, mcpp::Blocks::AIR); // clear the final lime carpet
     mc.postToChat("Congratulations! You reached the exit!"); 
 }  
