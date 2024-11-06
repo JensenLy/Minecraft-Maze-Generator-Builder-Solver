@@ -1,5 +1,5 @@
 #include "GenerateMaze.h"
-#include "Maze.h"
+
 GenerateMaze::GenerateMaze(){}
 
 GenerateMaze::GenerateMaze(int x, int y, mcpp::Coordinate currCord){
@@ -24,7 +24,7 @@ GenerateMaze GenerateMaze::ValidateUserMazeSize(){
     << "Minecraft and type - done:" << std::endl;
     std::cin >> doneInput;
 
-    //While the user does not input "done"
+    // While the user does not input "done"
     while(!isDone){
         if(doneInput == "done"){
             isDone = true;
@@ -36,16 +36,16 @@ GenerateMaze GenerateMaze::ValidateUserMazeSize(){
         }
     }
 
-    //Clear any extra user inputs from buffer
+    // Clear any extra user inputs from buffer
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
-    //Get the players position in Mineraft they want to build the maze
+    // Get the players position in Mineraft they want to build the maze
     playerOrg = mc.getPlayerPosition();
     playerOrg.y = (mc.getHeight(playerOrg.x, playerOrg.z))+1;
 
     std::cout << "Enter the length and width of maze" << std::endl;
 
-    //Check the user entered exactly 2 odd int's otherwise prompt them again
+    // Check the user entered exactly 2 odd int's otherwise prompt them again
     while(!correctInput){
         std::string whInput;
         std::getline(std::cin, whInput);
@@ -103,10 +103,14 @@ void GenerateMaze::ValidateUserMazeInput() {
 
                 for (char c : userInput) {
                     if (c != 'X' && c != '.') {
-                        std::cout << "Please enter only 'X' and '.' for the"
-                        << " maze structure." << std::endl;
-                        isValidInput = false;  // Mark input as invalid
+                        isValidInput = false; 
                     }
+                }
+
+                //If the input is invalid, indicate to the user why
+                if(!isValidInput){
+                    std::cout << "Please enter only 'X' and '.' for the"
+                    << " maze structure." << std::endl;
                 }
 
                 // If input is still valid, copy it to the maze
@@ -123,35 +127,44 @@ void GenerateMaze::ValidateUserMazeInput() {
 }
 
 void GenerateMaze::fixUserInput(){
+    // Call remove isolation first to check if there are any isolations to fix
     char fixedIso = this->removeIsolation();
     bool noProblems = false;
 
+    // If there is nothing to be fixed then set no Problems true for later use
     if(fixedIso == '0'){
         noProblems = true;
     }
 
+    // While there isolations still exist in the maze
     while(fixedIso != '0' && fixedIso != '2'){
         fixedIso = this->removeIsolation();
 
+        // Once all isolations are removed, let the user know they are fixed
         if(fixedIso == '0'){
         std::cout << "Isolations in your maze have been fixed!" << std::endl;
         }
     }
 
+    // Call the remove loop to check if there are any loops to be fixed.
     char fixedLoop = this->removeLoop();
 
+    // If there are no loops and no isolations, let the user know.
     if(noProblems && fixedLoop == '0'){
         std::cout << "Your maze has no problems!" << std::endl;
     }
 
+    // While loops still exist in the maze
     while(fixedLoop != '0' && fixedLoop != '2'){
         fixedLoop = this->removeLoop();
 
+        // Once all loops are fixed, let the user know they are fixed
         if(fixedLoop == '0'){
         std::cout << "Loops in your maze have been fixed!" << std::endl;
         }
     }
 
+    // If there are loops or isolations that cannot be fixed, tell the user
     if(fixedIso == '2' || fixedLoop == '2'){
         std::cout << "Your maze cannot be completely fixed!" << std::endl;
     }
@@ -162,7 +175,11 @@ void GenerateMaze::fixUserInput(){
 
 char GenerateMaze::removeIsolation(){
 
+    // Find the entrance to the users maze
     std::array<int, 2> entrance = this->findEntrance();
+
+    // Create a new 2D maze vector that can be used for flooding
+    // Call the floodFill function to flood fill on the '.'
     std::vector<std::vector<char>> floodedMaze = this->floodFill(entrance, '.');
 
     int x = maze.size();
@@ -175,32 +192,36 @@ char GenerateMaze::removeIsolation(){
     char foundIsolation = '0';
     int i = 0;
 
+    // Search the flooded maze until you find '.' (Meaning there is a isolation)
+    // Using a while loop because when a isolation is found and fixed, then the
+    // - function needs to exit
     while(foundIsolation == '0' && i < x){
         for(int j = 0; j < y; j++){
             if(floodedMaze[i][j] == '.'){
                 randChoice = randomMove(i, j, '0');
 
-                // UP
+                // Move UP
                 if(randChoice == 1){
                     dirX = -1;
                     dirY = 0;
                 }
-                // RIGHT
+                // Move RIGHT
                 else if(randChoice == 2){
                     dirX = 0;
                     dirY = 1;
                 }
-                // DOWN
+                // Move DOWN
                 else if(randChoice == 3){
                     dirX = 1;
                     dirY = 0;
                 }
-                // LEFT
+                // Move LEFT
                 else if(randChoice == 4){
                     dirX = 0;
                     dirY = -1;
                 }
 
+                // If there is valid move to fix the isolation, update the maze
                 if(randChoice != 0){
                     moveX = dirX*2 + i;
                     moveY = dirY*2 + j;
@@ -210,6 +231,8 @@ char GenerateMaze::removeIsolation(){
                     foundIsolation = 1;
                 }
                 else{
+                    // Return 2 which means there is no valid moves and -
+                    // - isolation cannot be fixed
                     foundIsolation = '2';
                 }
 
@@ -218,6 +241,7 @@ char GenerateMaze::removeIsolation(){
         i++;
     }
 
+    //Return the outcome of finding the Isolation to understand what to do next
     return foundIsolation;
 }
 
@@ -236,32 +260,36 @@ char GenerateMaze::removeLoop(){
     char foundIsolation = '0';
     int i = 0;
 
+    // Search the flooded maze until you find '.' (Meaning there is a loop)
+    // Using a while loop because when a loop is found and fixed, then the -
+    // - function needs to exit
     while(foundIsolation == '0' && i < x){
         for(int j = 0; j < y; j++){
             if(floodedMaze[i][j] == 'X'){
                 randChoice = randomMove(i, j, '2');
 
-                // UP
+                // Move UP
                 if(randChoice == 1){
                     dirX = -1;
                     dirY = 0;
                 }
-                // RIGHT
+                // Move RIGHT
                 else if(randChoice == 2){
                     dirX = 0;
                     dirY = 1;
                 }
-                // DOWN
+                // Move DOWN
                 else if(randChoice == 3){
                     dirX = 1;
                     dirY = 0;
                 }
-                // LEFT
+                // Move LEFT
                 else if(randChoice == 4){
                     dirX = 0;
                     dirY = -1;
                 }
 
+                // If there is a valid move to fix loop, update the maze
                 if(randChoice != 0){
                     moveX = dirX*2 + i;
                     moveY = dirY*2 + j;
@@ -271,6 +299,8 @@ char GenerateMaze::removeLoop(){
                     foundIsolation = '1';
                 }
                 else{
+                    // Return 2 which means there is no valid moves and loop
+                    // Cannot be fixed
                     foundIsolation = '2';
                 }
 
@@ -279,6 +309,7 @@ char GenerateMaze::removeLoop(){
         i++;
     }
 
+    // Return the outcome of finding the Isolation to understand what to do next
     return foundIsolation;
 
 }
@@ -288,22 +319,14 @@ char search) {
     // Create a copy of the maze to work with
     std::vector<std::vector<char>> floodedMaze = maze;
 
-    // Get the starting coordinates
+    // Get the starting coordinates to start the flood
     int startX = start[0];
     int startY = start[1];
 
+    // Call the flood fill to fill the floodedMaze
     floodFillHelper(floodedMaze, startX, startY, search);
 
-    int x = maze.size();
-    int y = maze[1].size();
-
-    for(int i = 0; i < x; i++){
-        for(int j = 0; j < y; j++){
-            std::cout << floodedMaze[i][j];
-        }
-        std::cout << std::endl;
-    }
-
+    // Return the flooded maze to identify where there are isolations/loops
     return floodedMaze;
 }       
 
@@ -312,7 +335,8 @@ int x, int y, char search) {
     // Initialize a flag to control recursion
     bool shouldContinue = true;
 
-    // Check boundary conditions and whether the current cell matches the search character
+    // Check boundary conditions and whether the current cell matches the - 
+    // - search char
     if (x < 0 || x >= static_cast<int>(floodedMaze.size()) || y < 0 ||
         y >= static_cast<int>(floodedMaze[0].size())) {
         shouldContinue = false;
@@ -321,7 +345,7 @@ int x, int y, char search) {
     }
 
     if (shouldContinue) {
-        // Replace the character with '0'
+        // Flood the maze with 0's to indicate that cell has been flodded
         floodedMaze[x][y] = '0';
 
         // Recursively call flood fill on neighboring cells
@@ -336,6 +360,7 @@ int x, int y, char search) {
 std::array<int, 2> GenerateMaze::findEntrance(){
     std::array<int, 2> entrance = {0,0};
 
+    // Check all sides for the entrance of the users inputed maze
     for(int i = 0; i < width; i++){
         if(maze[i][0] == '.'){
             entrance[0] = i;
@@ -346,15 +371,18 @@ std::array<int, 2> GenerateMaze::findEntrance(){
         }    
     }
 
+    // Return the x and y of where the entrance is in the maze
     return entrance;
 
 }
 
 void GenerateMaze::printMaze(){
+    //Get the dimensions of maze to print
     int x = maze.size();
     int y = maze[1].size();
 
-    std::cout << "**Printing Fixed Maze**" << std::endl;
+    //Print the formatting of the maze
+    std::cout << "**Printing Maze**" << std::endl;
     std::cout << "Base Point: " << cord << std::endl;
     std::cout << "Structure: "  << std::endl;
 
@@ -366,18 +394,17 @@ void GenerateMaze::printMaze(){
     }
 
     std::cout << "**End Printing Maze**" << std::endl;
+
 }
 
 void GenerateMaze::GenerateRandMaze(){
     int i;
     int j;
-
     int x = width;
     int y = height;
-
     int numSpaces = 0;
 
-    //Clear out empty spaces at odd i and j indexes
+    // Clear out empty spaces at odd i and j indexes to get maze ready to carve
     for(i = 0; i < x; i++){
         for(j = 0; j < y; j++){
             if(i % 2 != 0 && j % 2 != 0){
@@ -387,19 +414,25 @@ void GenerateMaze::GenerateRandMaze(){
         }
     }
 
-    //Generate 2 random numbers
-    //1st number is for a random starting position in an empty cell on the x axis
-    //2nd number is for a random choice of either the left or right side of the maze on the y axis
+    /*
+     * Generate 2 random numbers for starting location
+     * 1st number is for a random starting position in an empty cell on the x 
+     * axis
+     * 2nd number is for a random choice of either the left or right side of the
+     * maze on the y axis
+     */
     std::random_device rd;
     std::mt19937 gen(rd());
-
     std::uniform_int_distribution<> distX(1, x/2);
     std::uniform_int_distribution<> distY(0, 1);
-
     int startX = distX(gen);
     int startY = distY(gen);
 
-    //Depending on the 2nd random number place the start point on the left/right side of maze and put a '.' on the adjecent closest wall
+    /* 
+     * Use start X to indicate the starting position of the entrance on X axis
+     * Use start Y to indicate the starting position of the entrance on Y axis
+     * Mark '.' where this is, also set current location to this position
+     */
     if(startY == 0){
         maze[startX*2-1][1] = '.';
         maze[startX*2-1][0] = '.';
@@ -418,13 +451,11 @@ void GenerateMaze::GenerateRandMaze(){
 void GenerateMaze::GenerateTestMaze(){
     int i;
     int j;
-
     int x = width;
     int y = height;
-
     int numSpaces = 0;
 
-    //Clear out empty spaces at odd i and j indexes
+    // Clear out empty spaces at odd i and j indexes to get maze ready to carve
     for(i = 0; i < x; i++){
         for(j = 0; j < y; j++){
             if(i % 2 != 0 && j % 2 != 0){
@@ -434,11 +465,13 @@ void GenerateMaze::GenerateTestMaze(){
         }
     }
 
+    // Set the entrance to x[1], y[0] as the test mode required
     maze[1][1] = '.';
     maze[1][0] = '.';
     currLoc[0] = 1;
     currLoc[1] = 1;
 
+    // Set the players starting cord as the test mode required
     cord.x = 4848;
     cord.y = 71;
     cord.z = 4369;
@@ -447,10 +480,19 @@ void GenerateMaze::GenerateTestMaze(){
 }
 
 void GenerateMaze::carveMaze(){
-   pathWay.push_back(currLoc);
-   char validMode = '1';
+   
+    // Add the currentlocation to the pathway that was set in the generation of
+    // the maze
+    pathWay.push_back(currLoc);
 
+    // This mode is used in the randomMove function
+    char validMode = '1';
+
+    // Keep making moves until the pathway has recursed back to nothing, meaning
+    // the whole maze has been carved
     while(!pathWay.empty()){
+
+        // Random move gets a move that is random and is valid
         int randChoice = randomMove(currLoc[0], currLoc[1], validMode);
 
         int dirX = 0, dirY = 0;
@@ -476,6 +518,7 @@ void GenerateMaze::carveMaze(){
             dirY = -1;
         }
 
+        // If there is a valid move to be made
         if(randChoice != 0){
             // Carve the wall between current cell and next cell
             maze[currLoc[0] + dirX][currLoc[1] + dirY] = '.';
@@ -488,7 +531,7 @@ void GenerateMaze::carveMaze(){
             // Mark new cell as visited
             maze[currLoc[0]][currLoc[1]] = '.';
         } else {
-            // Backtrack
+            // Backtrack one move
             pathWay.pop_back();
             if (!pathWay.empty()) {
                 currLoc = pathWay.back();
@@ -499,14 +542,20 @@ void GenerateMaze::carveMaze(){
 }
 
 void GenerateMaze::carveTestMaze(){
+    // Add the current location to the pathway
     pathWay.push_back(currLoc);
+
+    // This mode is used in the randomMove function
     char validMode = '1';
 
+    // Keep making moves until the pathway has recursed back to nothing, meaning
+    // the whole maze has been carved
     while(!pathWay.empty()){
         bool moved = false;
+        int dir = 1;
 
-        for(int dir = 1; dir <= 4; ++dir){
-
+        // Make moves up, right, left, down as specified in test mode requirment
+        while(dir <= 4 && !moved){
             int dirX;
             int dirY;
         
@@ -531,6 +580,7 @@ void GenerateMaze::carveTestMaze(){
                 dirY = -1;
             }
 
+            // If the move that was made due to test mode is valid, carve
             if (isValid(currLoc[0], currLoc[1], dirX, dirY, validMode)) {
                 // Carve the wall between current and next cell
                 maze[currLoc[0] + dirX][currLoc[1] + dirY] = '.';
@@ -541,16 +591,19 @@ void GenerateMaze::carveTestMaze(){
 
                 // Add new location to path
                 pathWay.push_back({currLoc[0], currLoc[1]});
+
                 // Mark the new cell as visited
                 maze[currLoc[0]][currLoc[1]] = '.';
 
                 moved = true;
-                break;  // Stop checking directions once we move
             }
+
+            //Increment the direction to next one
+            ++dir;
         }
 
         if (!moved) {
-            // No valid moves, backtrack to previous cell
+            // No a valid moves, backtrack to previous cell
             pathWay.pop_back();
             if (!pathWay.empty()) {
                 currLoc = pathWay.back();
@@ -561,8 +614,12 @@ void GenerateMaze::carveTestMaze(){
 }
 
 int GenerateMaze::randomMove(int x, int y, char isNormal){
-    std::vector<int> validMoves;
-    //Get the curr location and for each up down etc check if they are valid. 
+    
+    // Vector to store all the valid moves
+    std::vector<int> validMoves; 
+
+    // Check all moves to see if that move is valid, if it is put into vector of
+    // valid moves
 
     // Move up
     if(isValid(x, y, -1, 0, isNormal)){
@@ -599,20 +656,27 @@ int GenerateMaze::randomMove(int x, int y, char isNormal){
 bool GenerateMaze::isValid(int x, int y, int dirX, int dirY, char isNormal){
     bool validMove = false;
 
+    // Set the var's for where the new move is
     int newX = x + 2 * dirX;
     int newY = y + 2 * dirY;
     
-    if (newX > 0 && newX < static_cast<int>(maze.size()) && newY > 0 && newY < static_cast<int>(maze[0].size())){
+    // Check if the move is in bounds of the dimensions of the maze
+    if (newX > 0 && newX < static_cast<int>(maze.size()) && newY > 0 && 
+        newY < static_cast<int>(maze[0].size())){
+        
+        // Normal mode = 1 (Used for normal recursion of carving maze)
         if(isNormal == '1'){
             if(maze[newX][newY] == ' ' && maze[x + dirX][y + dirY] != '\\'){
                 validMove = true;
             }
         }
+        // Isolation mode = 0 (Used for checking moves for fixing isolation)
         else if(isNormal == '0'){
             if(maze[newX][newY] == '.'){
                 validMove = true;
             }
         }
+        // Loop mode = 2 (Used for checking moves for fixing loop)
         else if(isNormal == '2'){
             if(maze[newX][newY] == 'X'){
                 validMove = true;
@@ -620,6 +684,7 @@ bool GenerateMaze::isValid(int x, int y, int dirX, int dirY, char isNormal){
         }
     }
 
+    // Return the bool of if the move was valid
     return validMove;
 
 }
@@ -633,6 +698,9 @@ int GenerateMaze::getMazeWidth(){
 }
 
 char** GenerateMaze::getMaze() const {
+    // This function converts the maze 2D vector into 2D char pointer, allowing
+    // teammate to generate the maze in minecraft
+
     int rows = width;
     int cols = height;
 
@@ -643,7 +711,8 @@ char** GenerateMaze::getMaze() const {
     for (int i = 0; i < rows; ++i) {
         mazeArray[i] = new char[cols];
         for (int j = 0; j < cols; ++j) {
-            mazeArray[i][j] = maze[i][j];  // Copy each element
+            // Copy each element
+            mazeArray[i][j] = maze[i][j];
         }
     }
 
