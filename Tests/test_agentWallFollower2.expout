@@ -1,0 +1,194 @@
+
+Welcome to MineCraft MazeRunner!
+--------------------------------
+
+------------- MAIN MENU -------------
+1) Generate Maze
+2) Build Maze in MineCraft
+3) Solve Maze
+4) Show Team Information
+5) Exit
+
+Enter Menu item to continue: 
+
+------------- SOLVE MAZE -------------
+1) Solve Manually
+2) Show Escape Route
+3) Show Escape Route (Enhanced)
+4) Back
+
+Enter Menu item to continue: 
+Please build the maze first before teleporting, doing so by pressing "2" on the main menu
+
+------------- SOLVE MAZE -------------
+1) Solve Manually
+2) Show Escape Route
+3) Show Escape Route (Enhanced)
+4) Back
+
+Enter Menu item to continue: 
+Please use "Manual Solve" before attempting to show the escape path by pressing "1" in "Solve Maze" menu
+
+------------- SOLVE MAZE -------------
+1) Solve Manually
+2) Show Escape Route
+3) Show Escape Route (Enhanced)
+4) Back
+
+Enter Menu item to continue: 
+Please use "Manual Solve" before attempting to show the escape path by pressing "1" in "Solve Maze" menu
+
+------------- SOLVE MAZE -------------
+1) Solve Manually
+2) Show Escape Route
+3) Show Escape Route (Enhanced)
+4) Back
+
+Enter Menu item to continue: 
+
+------------- MAIN MENU -------------
+1) Generate Maze
+2) Build Maze in MineCraft
+3) Solve Maze
+4) Show Team Information
+5) Exit
+
+Enter Menu item to continue: 
+
+------------- GENERATE MAZE -------------
+1) Read Maze from terminal
+2) Generate Random Maze
+3) Read Maze from terminal and validate it to be a perfect maze
+4) Back
+
+Enter Menu item to continue: 
+In Minecraft navigate to where you want the maze to be in Minecraft and type - done:
+Enter the length and width of maze
+**Printing Maze**
+Base Point: (4848,71,4369)
+Structure: 
+XXXXXXXXXXXXX
+............X
+XXXXXXXXXXX.X
+X.X...X...X.X
+X.X.X.X.X.X.X
+X.X.X.X.X.X.X
+X.X.X.X.X.X.X
+X.X.X.X.X.X.X
+X.X.X.X.X.X.X
+X.X.X.X.X.X.X
+X.X.X.X.X.X.X
+X...X...X...X
+XXXXXXXXXXXXX
+**End Printing Maze**
+
+------------- MAIN MENU -------------
+1) Generate Maze
+2) Build Maze in MineCraft
+3) Solve Maze
+4) Show Team Information
+5) Exit
+
+Enter Menu item to continue: 
+
+------------- SOLVE MAZE -------------
+1) Solve Manually
+2) Show Escape Route
+3) Show Escape Route (Enhanced)
+4) Back
+
+Enter Menu item to continue: 
+Please build the maze first before teleporting, doing so by pressing "2" on the main menu
+
+------------- SOLVE MAZE -------------
+1) Solve Manually
+2) Show Escape Route
+3) Show Escape Route (Enhanced)
+4) Back
+
+Enter Menu item to continue: 
+
+------------- MAIN MENU -------------
+1) Generate Maze
+2) Build Maze in MineCraft
+3) Solve Maze
+4) Show Team Information
+5) Exit
+
+Enter Menu item to continue: 
+
+------------- BUILD MAZE -------------
+1) Normal Mode
+2) Enhancement Mode
+3) Back
+
+Enter Menu item to continue: 
+Building Maze
+Building at X: 4848, Y: 71, Z: 4369
+Built Maze
+
+------------- MAIN MENU -------------
+1) Generate Maze
+2) Build Maze in MineCraft
+3) Solve Maze
+4) Show Team Information
+5) Exit
+
+Enter Menu item to continue: 
+
+------------- SOLVE MAZE -------------
+1) Solve Manually
+2) Show Escape Route
+3) Show Escape Route (Enhanced)
+4) Back
+
+Enter Menu item to continue: 
+Teleported to: 4859 71 4380
+
+------------- SOLVE MAZE -------------
+1) Solve Manually
+2) Show Escape Route
+3) Show Escape Route (Enhanced)
+4) Back
+
+Enter Menu item to continue: 
+Step[1]: (4859, 71, 4379)
+Step[2]: (4859, 71, 4378)
+Step[3]: (4859, 71, 4377)
+Step[4]: (4859, 71, 4376)
+Step[5]: (4859, 71, 4375)
+Step[6]: (4859, 71, 4374)
+Step[7]: (4859, 71, 4373)
+Step[8]: (4859, 71, 4372)
+Step[9]: (4859, 71, 4371)
+Step[10]: (4859, 71, 4370)
+Step[11]: (4858, 71, 4370)
+Step[12]: (4857, 71, 4370)
+Step[13]: (4856, 71, 4370)
+Step[14]: (4855, 71, 4370)
+Step[15]: (4854, 71, 4370)
+Step[16]: (4853, 71, 4370)
+Step[17]: (4852, 71, 4370)
+Step[18]: (4851, 71, 4370)
+Step[19]: (4850, 71, 4370)
+Step[20]: (4849, 71, 4370)
+
+------------- SOLVE MAZE -------------
+1) Solve Manually
+2) Show Escape Route
+3) Show Escape Route (Enhanced)
+4) Back
+
+Enter Menu item to continue: 
+
+------------- MAIN MENU -------------
+1) Generate Maze
+2) Build Maze in MineCraft
+3) Solve Maze
+4) Show Team Information
+5) Exit
+
+Enter Menu item to continue: 
+
+The End!
+
