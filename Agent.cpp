@@ -19,7 +19,6 @@ bool Agent::checkNorth() {
 
     if (tempBlock == mcpp::Blocks::AIR){
         isAir = true; 
-        // mc.postToChat("North Clear");
     }
 
     return isAir; 
@@ -62,9 +61,9 @@ bool Agent::checkWest() {
 }
 
 void Agent::goNorth() { 
-    mc.setBlock(currPos, mcpp::Blocks::AIR);
-    currPos = currPos + MOVE_XPLUS; 
-    mc.setBlock(currPos, mcpp::Blocks::LIME_CARPET);
+    mc.setBlock(currPos, mcpp::Blocks::AIR); // clear the current lime carpet
+    currPos = currPos + MOVE_XPLUS; // step 
+    mc.setBlock(currPos, mcpp::Blocks::LIME_CARPET); // place the new carpet
 } 
 
 void Agent::goEast() {
@@ -91,29 +90,24 @@ void Agent::reportStep() {
     reportStep += " (" + std::to_string(currPos.x);
     reportStep += ", " + std::to_string(currPos.y);
     reportStep += ", " + std::to_string(currPos.z) + ")";
-    // reportStep += " Orientation: " + std::to_string(orientation % 4); 
-    // mc.postToChat(reportStep); 
     std::cout << reportStep << std::endl; 
 }
 
 bool Agent::isDone() { 
+    // returns true when there's a blue carpet around the player
     bool isDone = false; 
 
     if (mc.getBlock(currPos + MOVE_XPLUS) == mcpp::Blocks::BLUE_CARPET){
-        isDone = true; 
-        // currPos = currPos + MOVE_XPLUS; 
+        isDone = true;  
     }
     if (mc.getBlock(currPos + MOVE_ZPLUS) == mcpp::Blocks::BLUE_CARPET){
         isDone = true; 
-        // currPos = currPos + MOVE_ZPLUS; 
     }
     if (mc.getBlock(currPos + MOVE_XMINUS) == mcpp::Blocks::BLUE_CARPET){
-        isDone = true; 
-        // currPos = currPos + MOVE_XMINUS; 
+        isDone = true;  
     }
     if (mc.getBlock(currPos + MOVE_ZMINUS) == mcpp::Blocks::BLUE_CARPET){
         isDone = true; 
-        // currPos = currPos + MOVE_ZMINUS; 
     }
 
     return isDone; 
@@ -165,18 +159,26 @@ void Agent::manualSolveTest\
     output += std::to_string(farPoint.x); 
     output += " " + std::to_string(farPoint.y);
     output += " " + std::to_string(farPoint.z);
-    mc.postToChat(output); 
+    std::cout << output << std::endl; 
 
 }
 
 void Agent::initialiseSolve(){ 
+    // The first part of the while-loop operates in the same way as 
+    // initialiseSolveTest(), which is checking the sides and set the
+    // orientation based on what's available. The second part of the loop
+    // teleports the player to a random location 1 block away from the player 
+    // until there's a block next to. 
+
+    // bool end will turns "true" if free space is found, 
+    // which ends the loop. 
     bool end = false; 
-    srand(rand()); 
+    srand(rand()); // random seed for more randomness
 
     while(!end){
-        if(!checkNorth()){ 
+        if(!checkNorth()){
             orientation = 3; 
-            end = true; 
+            end = true;
         }
         else if (!checkEast()){ 
             orientation = 0; 
@@ -190,7 +192,7 @@ void Agent::initialiseSolve(){
             orientation = 2; 
             end = true; 
         }
-        else {
+        else { // randomly move the player
             if (rand() % 4 == 0){ 
                 currPos = currPos + MOVE_XPLUS;
                 mc.setPlayerPosition(currPos);  
@@ -213,7 +215,9 @@ void Agent::initialiseSolve(){
 }
 
 void Agent::initialiseSolveTest(){  
-    // bool end = false; 
+    // This function will just check the surrounding and set the orientation, 
+    // starts with orientation = 3 means facing west means the right hand is 
+    // facing north.  
     orientation = 3; 
     if (!checkNorth()){ 
         orientation = 3; 
@@ -228,13 +232,14 @@ void Agent::initialiseSolveTest(){
         orientation = 2;
     }
 
-    mc.postToChat("Orientation: " + std::to_string(orientation % 4)); 
+    mc.postToChat("Orientation: " + std::to_string(orientation % 4));
 }
 
 void Agent::rightHandSolve() { 
     mc.doCommand("time set day");
+    currPos.y = mc.getHeight(currPos.x, currPos.z) + 1;
 
-    std::string origPos = "Original Position:"; 
+    std::string origPos = "Start Position:"; 
     origPos += " " + std::to_string(currPos.x);
     origPos += " " + std::to_string(currPos.y);
     origPos += " " + std::to_string(currPos.z);
@@ -243,89 +248,110 @@ void Agent::rightHandSolve() {
     mc.postToChat("Follow the Lime Carpet");
 
     while (keepGoing){ 
+        // In the wall follower solving, I use an integer named "orientation"
+        // to indicate where the player is facing (the front, not right hand).
+        // For each step, I check the current position's (currPos) right, 
+        // front, back, and left respectively and take a step if there's 
+        // a free space (since it's right-hand wall follower so I have to
+        // prioritise/check the right hand side first). 
+
+        // In this context: 
+        //  - North means X-positive/X-plus
+        //  - East means Z-positive/Z-plus
+        //  - South means X-negative/X-minus
+        //  - West means Z-negative/Z-minus
+
+        // Orientation is responsible to where the player is facing. Treat it
+        // like a circle where each number in orientation equals 90-degree
+        // (or pi/2 if you use that). 
+        // E.g. orientation = 5 = 450-degree = 90-degree (3 o-clock or east)
 
         if (orientation % 4 == 0){ // Facing North
             if (checkEast()) {
-                orientation += 1; // turn 90 degree clockwise
+                orientation += 1; // turn 90 degree clockwise (turn right)
                 goEast();  
             }
             else if(checkNorth()) { 
                 goNorth(); // go straight
             }
             else if(checkWest()) { 
-                orientation += 3; // turn 270 degree clockwise (or 90 degree anti-clockwise)
+                orientation += 3; // turn 270 degree clockwise (turn left) 
                 goWest(); 
             }
             else { 
-                orientation += 2; // turn 180 degree and step
+                orientation += 2; // turn 180 degree and step (turn around)
                 goSouth(); 
             }
         }
         else if (orientation % 4 == 1){ // Facing East
             if (checkSouth()) {
-                orientation += 1; // turn 90 degree clockwise
+                orientation += 1; // turn 90 degree clockwise (turn right)
                 goSouth();  
             }
             else if(checkEast()) { 
                 goEast(); // go straight
             }
             else if(checkNorth()) { 
-                orientation += 3; // turn 270 degree clockwise (or 90 degree anti-clockwise)
+                orientation += 3; // turn 270 degree clockwise (turn left)
                 goNorth(); 
             }
             else { 
-                orientation += 2; // turn 180 degree and step
+                orientation += 2; // turn 180 degree and step (turn around)
                 goWest(); 
             }
         }
         else if (orientation % 4 == 2){ // Facing South
             if (checkWest()) { 
-                orientation += 1; // turn 90 degree clockwise
+                orientation += 1; // turn 90 degree clockwise (turn right)
                 goWest();  
             }
             else if(checkSouth()) { 
                 goSouth(); // go straight
             }
             else if(checkEast()) { 
-                orientation += 3; // turn 270 degree clockwise (or 90 degree anti-clockwise)
+                orientation += 3; // turn 270 degree clockwise (turn left)
                 goEast(); 
             }
             else { 
-                orientation += 2; // turn 180 degree and step
+                orientation += 2; // turn 180 degree and step (turn around)
                 goNorth(); 
             }
         }
-        else if (orientation % 4 == 3){ // Facing West
+        else if (orientation % 4 == 3){ // Facing West 
             if (checkNorth()) {
-                orientation += 1; // turn 90 degree clockwise
+                orientation += 1; // turn 90 degree clockwise (turn right)
                 goNorth();  
             }
             else if(checkWest()) { 
                 goWest(); // go straight
             }
             else if(checkSouth()) { 
-                orientation += 3; // turn 270 degree clockwise (or 90 degree anti-clockwise)
+                orientation += 3; // turn 270 degree clockwise (turn left)
                 goSouth(); 
             }
             else { 
-                orientation += 2; // turn 180 degree and step
+                orientation += 2; // turn 180 degree and step (turn around)
                 goEast(); 
             }
         }
 
         reportStep(); 
 
+        // isDone() returns true when there's a blue carpet next to the player 
         if (isDone()) {
-            keepGoing = false; 
-            mc.setBlock(currPos, mcpp::Blocks::AIR);
+            keepGoing = false; // keepGoing is what keeps the loop going
+            // the line below clears the current lime carpet. 
+            mc.setBlock(currPos, mcpp::Blocks::AIR); 
             mc.postToChat("Congratulations! You reached the exit!"); 
         }
         
+        // half a second delay. 
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
     }
 } 
 
 void Agent::bfsSolve(){ 
+    currPos.y = mc.getHeight(currPos.x, currPos.z) + 1;
     int i = 0; 
     bool isVisited = false; 
     std::vector<mcpp::Coordinate> queue; 
@@ -334,10 +360,10 @@ void Agent::bfsSolve(){
     std::vector<mcpp::Coordinate> path; 
 
     while(keepGoing) { 
-        // std::cout << "Loop " << i << std::endl; 
         isVisited = false; 
 
-        for (size_t j = 0; j < visited.size(); j++) { // Check if the current block is visited
+        for (size_t j = 0; j < visited.size(); j++) { 
+            // Check if the current block is visited
             if (queue.at(i) == visited[j]) { 
                 isVisited = true; 
             }
