@@ -12,75 +12,85 @@ Agent::~Agent()
 {
 }
 
-bool Agent::checkNorth() {
-    bool isAir = false; 
+bool Agent::checkNorth(mcpp::BlockType block) {
+    bool clear = false; 
     mcpp::BlockType tempBlock; 
-    tempBlock = mc.getBlock(currPos + MOVE_XPLUS); 
+    mcpp::Coordinate tempPos = currPos + MOVE_XPLUS; 
+    tempPos.y = mc.getHeight(tempPos.x, tempPos.z);
+    tempBlock = mc.getBlock(tempPos); 
 
-    if (tempBlock == mcpp::Blocks::AIR){
-        isAir = true; 
+    if (tempBlock != block){
+        clear = true;  
     }
-
-    return isAir; 
+    return clear; 
 }
 
-bool Agent::checkEast() {
-    bool isAir = false; 
+bool Agent::checkEast(mcpp::BlockType block) {
+    bool clear = false; 
     mcpp::BlockType tempBlock; 
-    tempBlock = mc.getBlock(currPos + MOVE_ZPLUS); 
+    mcpp::Coordinate tempPos = currPos + MOVE_ZPLUS; 
+    tempPos.y = mc.getHeight(tempPos.x, tempPos.z);
+    tempBlock = mc.getBlock(tempPos); 
+    tempBlock = mc.getBlock(tempPos); 
 
-    if (tempBlock == mcpp::Blocks::AIR){
-        isAir = true; 
+    if (tempBlock != block){
+        clear = true;  
     }
-
-    return isAir; 
+    return clear; 
 }
 
-bool Agent::checkSouth() {
-    bool isAir = false; 
+bool Agent::checkSouth(mcpp::BlockType block) {
+    bool clear = false; 
     mcpp::BlockType tempBlock; 
-    tempBlock = mc.getBlock(currPos + MOVE_XMINUS); 
+    mcpp::Coordinate tempPos = currPos + MOVE_XMINUS; 
+    tempPos.y = mc.getHeight(tempPos.x, tempPos.z);
+    tempBlock = mc.getBlock(tempPos); 
+    tempBlock = mc.getBlock(tempPos); 
 
-    if (tempBlock == mcpp::Blocks::AIR){
-        isAir = true; 
+    if (tempBlock != block){
+        clear = true;  
     }
-
-    return isAir; 
+    return clear; 
 }
 
-bool Agent::checkWest() {
-    bool isAir = false; 
+bool Agent::checkWest(mcpp::BlockType block) {
+    bool clear = false; 
     mcpp::BlockType tempBlock; 
-    tempBlock = mc.getBlock(currPos + MOVE_ZMINUS); 
-
-    if (tempBlock == mcpp::Blocks::AIR){
-        isAir = true; 
+    mcpp::Coordinate tempPos = currPos + MOVE_ZMINUS; 
+    tempPos.y = mc.getHeight(tempPos.x, tempPos.z);
+    tempBlock = mc.getBlock(tempPos); 
+    tempBlock = mc.getBlock(tempPos); 
+    if (tempBlock != block){
+        clear = true;  
     }
-
-    return isAir; 
+    return clear; 
 }
 
 void Agent::goNorth() { 
     mc.setBlock(currPos, mcpp::Blocks::AIR); // clear the current lime carpet
     currPos = currPos + MOVE_XPLUS; // step 
+    currPos.y = mc.getHeight(currPos.x, currPos.z) + 1; 
     mc.setBlock(currPos, mcpp::Blocks::LIME_CARPET); // place the new carpet
 } 
 
 void Agent::goEast() {
     mc.setBlock(currPos, mcpp::Blocks::AIR);
     currPos = currPos + MOVE_ZPLUS; 
+    currPos.y = mc.getHeight(currPos.x, currPos.z) + 1; 
     mc.setBlock(currPos, mcpp::Blocks::LIME_CARPET);
 }
 
 void Agent::goSouth() {
     mc.setBlock(currPos, mcpp::Blocks::AIR);
     currPos = currPos + MOVE_XMINUS; 
+    currPos.y = mc.getHeight(currPos.x, currPos.z) + 1; 
     mc.setBlock(currPos, mcpp::Blocks::LIME_CARPET);
 }
 
 void Agent::goWest() {
     mc.setBlock(currPos, mcpp::Blocks::AIR);
     currPos = currPos + MOVE_ZMINUS; 
+    currPos.y = mc.getHeight(currPos.x, currPos.z) + 1; 
     mc.setBlock(currPos, mcpp::Blocks::LIME_CARPET);
 }
 
@@ -94,19 +104,31 @@ void Agent::reportStep() {
 }
 
 bool Agent::isDone() { 
-    // returns true when there's a blue carpet around the player
+    // returns true when there's a blue carpet around the current position. 
     bool isDone = false; 
+    mcpp::Coordinate tempPos;
 
-    if (mc.getBlock(currPos + MOVE_XPLUS) == mcpp::Blocks::BLUE_CARPET){
+    tempPos = currPos + MOVE_XPLUS; 
+    tempPos.y = mc.getHeight(tempPos.x, tempPos.z) + 1; 
+    if (mc.getBlock(tempPos) == mcpp::Blocks::BLUE_CARPET){
         isDone = true;  
     }
-    if (mc.getBlock(currPos + MOVE_ZPLUS) == mcpp::Blocks::BLUE_CARPET){
+
+    tempPos = currPos + MOVE_ZPLUS; 
+    tempPos.y = mc.getHeight(tempPos.x, tempPos.z) + 1; 
+    if (mc.getBlock(tempPos) == mcpp::Blocks::BLUE_CARPET){
         isDone = true; 
     }
-    if (mc.getBlock(currPos + MOVE_XMINUS) == mcpp::Blocks::BLUE_CARPET){
+
+    tempPos = currPos + MOVE_XMINUS; 
+    tempPos.y = mc.getHeight(tempPos.x, tempPos.z) + 1; 
+    if (mc.getBlock(tempPos) == mcpp::Blocks::BLUE_CARPET){
         isDone = true;  
     }
-    if (mc.getBlock(currPos + MOVE_ZMINUS) == mcpp::Blocks::BLUE_CARPET){
+
+    tempPos = currPos + MOVE_ZMINUS; 
+    tempPos.y = mc.getHeight(tempPos.x, tempPos.z) + 1; 
+    if (mc.getBlock(tempPos) == mcpp::Blocks::BLUE_CARPET){
         isDone = true; 
     }
 
@@ -129,6 +151,7 @@ void Agent::manualSolve\
         if (maze[rowRand][colRand] == '.') { 
             keepGoing = false; 
             currPos = playerOrg + mcpp::Coordinate(rowRand, 0 , colRand);
+            currPos.y = mc.getHeight(currPos.x, currPos.z); 
             mc.setPlayerTilePosition(currPos); 
         }
     }
@@ -153,7 +176,9 @@ void Agent::manualSolveTest\
         }
     }
 
-    mc.setPlayerTilePosition(playerOrg + farPoint);
+    mcpp::Coordinate tempPos = playerOrg + farPoint; 
+    tempPos.y = mc.getHeight(tempPos.x, tempPos.z); 
+    mc.setPlayerTilePosition(tempPos);
     farPoint = playerOrg + farPoint; 
     std::string output = "Teleported to: "; 
     output += std::to_string(farPoint.x); 
@@ -176,37 +201,41 @@ void Agent::initialiseSolve(){
     srand(rand()); // random seed for more randomness
 
     while(!end){
-        if(!checkNorth()){
+        if(!checkNorth(acacia)){
             orientation = 3; 
             end = true;
         }
-        else if (!checkEast()){ 
+        else if (!checkEast(acacia)){ 
             orientation = 0; 
             end = true; 
         }
-        else if (!checkSouth()){ 
+        else if (!checkSouth(acacia)){ 
             orientation = 1; 
             end = true; 
         }
-        else if (!checkWest()){ 
+        else if (!checkWest(acacia)){ 
             orientation = 2; 
             end = true; 
         }
         else { // randomly move the player
             if (rand() % 4 == 0){ 
                 currPos = currPos + MOVE_XPLUS;
+                currPos.y = mc.getHeight(currPos.x, currPos.z) + 1; 
                 mc.setPlayerPosition(currPos);  
             }
             else if (rand() % 4 == 1){ 
                 currPos = currPos + MOVE_ZPLUS;
+                currPos.y = mc.getHeight(currPos.x, currPos.z) + 1; 
                 mc.setPlayerPosition(currPos);   
             }
             else if (rand() % 4 == 2){ 
                 currPos = currPos + MOVE_XMINUS;
+                currPos.y = mc.getHeight(currPos.x, currPos.z) + 1; 
                 mc.setPlayerPosition(currPos);   
             }
             else if (rand() % 4 == 3){ 
                 currPos = currPos + MOVE_ZMINUS;
+                currPos.y = mc.getHeight(currPos.x, currPos.z) + 1; 
                 mc.setPlayerPosition(currPos);  
             }
         }
@@ -219,16 +248,16 @@ void Agent::initialiseSolveTest(){
     // starts with orientation = 3 means facing west means the right hand is 
     // facing north.  
     orientation = 3; 
-    if (!checkNorth()){ 
+    if (!checkNorth(acacia)){ 
         orientation = 3; 
     }
-    else if (!checkEast()){ 
+    else if (!checkEast(acacia)){ 
         orientation = 0;
     }
-    else if (!checkSouth()){ 
+    else if (!checkSouth(acacia)){ 
         orientation = 1;
     }
-    else if (!checkWest()){ 
+    else if (!checkWest(acacia)){ 
         orientation = 2;
     }
 
@@ -267,14 +296,14 @@ void Agent::rightHandSolve() {
         // E.g. orientation = 5 = 450-degree = 90-degree (3 o-clock or east)
 
         if (orientation % 4 == 0){ // Facing North
-            if (checkEast()) {
+            if (checkEast(acacia)) {
                 orientation += 1; // turn 90 degree clockwise (turn right)
                 goEast();  
             }
-            else if(checkNorth()) { 
+            else if(checkNorth(acacia)) { 
                 goNorth(); // go straight
             }
-            else if(checkWest()) { 
+            else if(checkWest(acacia)) { 
                 orientation += 3; // turn 270 degree clockwise (turn left) 
                 goWest(); 
             }
@@ -284,14 +313,14 @@ void Agent::rightHandSolve() {
             }
         }
         else if (orientation % 4 == 1){ // Facing East
-            if (checkSouth()) {
+            if (checkSouth(acacia)) {
                 orientation += 1; // turn 90 degree clockwise (turn right)
                 goSouth();  
             }
-            else if(checkEast()) { 
+            else if(checkEast(acacia)) { 
                 goEast(); // go straight
             }
-            else if(checkNorth()) { 
+            else if(checkNorth(acacia)) { 
                 orientation += 3; // turn 270 degree clockwise (turn left)
                 goNorth(); 
             }
@@ -301,14 +330,14 @@ void Agent::rightHandSolve() {
             }
         }
         else if (orientation % 4 == 2){ // Facing South
-            if (checkWest()) { 
+            if (checkWest(acacia)) { 
                 orientation += 1; // turn 90 degree clockwise (turn right)
                 goWest();  
             }
-            else if(checkSouth()) { 
+            else if(checkSouth(acacia)) { 
                 goSouth(); // go straight
             }
-            else if(checkEast()) { 
+            else if(checkEast(acacia)) { 
                 orientation += 3; // turn 270 degree clockwise (turn left)
                 goEast(); 
             }
@@ -318,14 +347,14 @@ void Agent::rightHandSolve() {
             }
         }
         else if (orientation % 4 == 3){ // Facing West 
-            if (checkNorth()) {
+            if (checkNorth(acacia)) {
                 orientation += 1; // turn 90 degree clockwise (turn right)
                 goNorth();  
             }
-            else if(checkWest()) { 
+            else if(checkWest(acacia)) { 
                 goWest(); // go straight
             }
-            else if(checkSouth()) { 
+            else if(checkSouth(acacia)) { 
                 orientation += 3; // turn 270 degree clockwise (turn left)
                 goSouth(); 
             }
@@ -354,6 +383,7 @@ void Agent::bfsSolve(){
     currPos.y = mc.getHeight(currPos.x, currPos.z) + 1;
     int i = 0; 
     bool isVisited = false; 
+    mcpp::Coordinate tempPos; 
     std::vector<mcpp::Coordinate> queue; 
     queue.push_back(currPos); 
     std::vector<mcpp::Coordinate> visited; 
@@ -370,17 +400,32 @@ void Agent::bfsSolve(){
         }
 
         if (!isVisited){
-            if (mc.getBlock(queue[i] + MOVE_XPLUS) == mcpp::Blocks::AIR) {
-                queue.push_back(queue[i] + MOVE_XPLUS); 
+            tempPos = queue[i] + MOVE_XPLUS; 
+            tempPos.y = mc.getHeight(tempPos.x, tempPos.z); 
+            if (mc.getBlock(tempPos) != acacia) {
+                tempPos.y += 1;  
+                queue.push_back(tempPos); 
             }
-            if (mc.getBlock(queue[i] + MOVE_ZPLUS) == mcpp::Blocks::AIR) {
-                queue.push_back(queue[i] + MOVE_ZPLUS); 
+
+            tempPos = queue[i] + MOVE_ZPLUS; 
+            tempPos.y = mc.getHeight(tempPos.x, tempPos.z);
+            if (mc.getBlock(tempPos) != acacia) {
+                tempPos.y += 1;
+                queue.push_back(tempPos); 
             }
-            if (mc.getBlock(queue[i] + MOVE_XMINUS) == mcpp::Blocks::AIR) {
-                queue.push_back(queue[i] + MOVE_XMINUS); 
+
+            tempPos = queue[i] + MOVE_XMINUS; 
+            tempPos.y = mc.getHeight(tempPos.x, tempPos.z);
+            if (mc.getBlock(tempPos) != acacia) {
+                tempPos.y += 1;
+                queue.push_back(tempPos); 
             }
-            if (mc.getBlock(queue[i] + MOVE_ZMINUS) == mcpp::Blocks::AIR) {
-                queue.push_back(queue[i] + MOVE_ZMINUS); 
+
+            tempPos = queue[i] + MOVE_ZMINUS; 
+            tempPos.y = mc.getHeight(tempPos.x, tempPos.z);
+            if (mc.getBlock(tempPos) != acacia) {
+                tempPos.y += 1;
+                queue.push_back(tempPos); 
             }
 
             mc.setBlock(queue.at(i), mcpp::Blocks::WHITE_CARPET);
