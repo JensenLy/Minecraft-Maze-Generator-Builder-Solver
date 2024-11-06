@@ -202,7 +202,7 @@ int main(int argc, char* argv[]){
             if (mode) { // Test mode
                 if(userInput == "1") {
                     if (isBuilt){
-                        Agent solve = Agent();  
+                        Agent solve;  
                         
                         solve.manualSolveTest(userMaze.getCord(),\
                         userMaze.getMazeHeight(), userMaze.getMazeWidth(), \
@@ -219,7 +219,7 @@ int main(int argc, char* argv[]){
                 }
                 else if(userInput == "2"){
                     if (isTeleported){ 
-                        Agent solve = Agent(); 
+                        Agent solve; 
                         solve.initialiseSolveTest();
                         solve.rightHandSolve();  
                         isTeleported = false; 
@@ -234,7 +234,7 @@ int main(int argc, char* argv[]){
                 }
                 else if(userInput == "3") {
                     if (isTeleported){ 
-                        Agent solve = Agent(); 
+                        Agent solve; 
                         solve.bfsSolve(); 
 
                         isTeleported = false; 
@@ -256,7 +256,7 @@ int main(int argc, char* argv[]){
             else { // Normal mode
                 if(userInput == "1"){ 
                     if (isBuilt){
-                        Agent solve = Agent();  
+                        Agent solve;  
                         
                         solve.manualSolve(userMaze.getCord(),\
                         userMaze.getMazeHeight(), userMaze.getMazeWidth(), \
@@ -272,7 +272,7 @@ int main(int argc, char* argv[]){
                 }
                 else if(userInput == "2"){
                     if (isTeleported){ 
-                        Agent solve = Agent(); 
+                        Agent solve; 
                         solve.initialiseSolve();
                         solve.rightHandSolve(); 
 
@@ -287,7 +287,7 @@ int main(int argc, char* argv[]){
                 }
                 else if(userInput == "3") {
                     if (isTeleported){ 
-                        Agent solve = Agent(); 
+                        Agent solve; 
                         solve.bfsSolve(); 
 
                         isTeleported = false; 
