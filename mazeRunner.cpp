@@ -85,9 +85,6 @@ int main(int argc, char* argv[]){
                 }
                 else if(userInput == "2"){
                     userMaze = userMaze.ValidateUserMazeSize();
-                    std::cout << "***Printing Maze***" << std::endl;
-                    std::cout << "Base Point: " << userMaze.getCord() << std::endl;
-                    std::cout << "Structure: "  << std::endl;
                     userMaze.GenerateTestMaze();
                     userMaze.carveTestMaze();
                     userMaze.printMaze();
@@ -97,11 +94,8 @@ int main(int argc, char* argv[]){
                 else if(userInput == "3"){
                     userMaze = userMaze.ValidateUserMazeSize();
                     userMaze.ValidateUserMazeInput();
-                    std::array<int, 2> entrance = userMaze.findEntrance();
-                    userMaze.floodFill(entrance, '.');
-                    userMaze.printMaze();
-
-                    userMaze.printMaze();
+                    userMaze.fixUserInput();
+                    correctInput = true;
                     curState = ST_Main;
                 }
                 else if(userInput == "4"){
@@ -131,7 +125,7 @@ int main(int argc, char* argv[]){
                     userMaze = userMaze.ValidateUserMazeSize();
                     userMaze.ValidateUserMazeInput();
                     userMaze.fixUserInput();
-
+                    correctInput = true;
                     curState = ST_Main;
                 }
                 else if(userInput == "4"){

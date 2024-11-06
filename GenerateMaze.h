@@ -23,7 +23,7 @@ GenerateMaze(int x, int y, mcpp::Coordinate currCord);
 GenerateMaze ValidateUserMazeSize();
 void ValidateUserMazeInput();
 
-//Fixing the maze from the user input
+//Fixing the maze from the user input (Extension)
 void fixUserInput();
 char removeIsolation();
 char removeLoop();
