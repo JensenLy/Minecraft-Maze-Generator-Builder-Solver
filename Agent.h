@@ -13,6 +13,7 @@
 #define MOVE_XMINUS mcpp::Coordinate(-1,0,0)
 #define MOVE_ZPLUS mcpp::Coordinate(0,0,1)
 #define MOVE_ZMINUS mcpp::Coordinate(0,0,-1)
+#define acacia mcpp::Blocks::ACACIA_WOOD_PLANK
 
 // enum solveAlgorithm{
 //         RIGHT_HAND_FOLLOW,
@@ -33,10 +34,10 @@ public:
     Agent(/*mcpp::Coordinate startLoc*/);
     ~Agent();
 
-    bool checkNorth(); 
-    bool checkEast(); 
-    bool checkSouth(); 
-    bool checkWest(); 
+    bool checkNorth(mcpp::BlockType block); 
+    bool checkEast(mcpp::BlockType block); 
+    bool checkSouth(mcpp::BlockType block); 
+    bool checkWest(mcpp::BlockType block); 
 
     void goNorth(); 
     void goEast(); 
