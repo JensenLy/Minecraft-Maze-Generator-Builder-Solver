@@ -297,7 +297,7 @@ int main(int argc, char* argv[]){
                     curState = ST_Main;
                 }
                 else{
-                    std::cout << "Please select menu item with numbers 1 to 3"; 
+                    std::cout << "Please select menu item with numbers 1 to 4"; 
                 }
             }
         }

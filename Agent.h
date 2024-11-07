@@ -15,23 +15,11 @@
 #define MOVE_ZMINUS mcpp::Coordinate(0,0,-1)
 #define acacia mcpp::Blocks::ACACIA_WOOD_PLANK
 
-// enum solveAlgorithm{
-//         RIGHT_HAND_FOLLOW,
-//         BREATH_FIRST_SEARCH,
-// };
-
-// enum AgentOrientation{
-//     X_PLUS,
-//     Z_PLUS,
-//     X_MINUS,
-//     Z_MINUS
-// };
-
 class Agent
 {
 
 public:
-    Agent(/*mcpp::Coordinate startLoc*/);
+    Agent();
     ~Agent();
 
     bool checkNorth(mcpp::BlockType block); 
