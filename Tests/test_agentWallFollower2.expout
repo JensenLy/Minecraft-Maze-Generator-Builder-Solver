@@ -14,7 +14,7 @@ Enter Menu item to continue:
 ------------- SOLVE MAZE -------------
 1) Solve Manually
 2) Show Escape Route
-3) Show Escape Route (Enhanced)
+3) Show Escape Route (Enhanced - Shortest Path)
 4) Back
 
 Enter Menu item to continue: 
@@ -23,7 +23,7 @@ Please build the maze first before teleporting, doing so by pressing "2" on the 
 ------------- SOLVE MAZE -------------
 1) Solve Manually
 2) Show Escape Route
-3) Show Escape Route (Enhanced)
+3) Show Escape Route (Enhanced - Shortest Path)
 4) Back
 
 Enter Menu item to continue: 
@@ -32,7 +32,7 @@ Please use "Manual Solve" before attempting to show the escape path by pressing 
 ------------- SOLVE MAZE -------------
 1) Solve Manually
 2) Show Escape Route
-3) Show Escape Route (Enhanced)
+3) Show Escape Route (Enhanced - Shortest Path)
 4) Back
 
 Enter Menu item to continue: 
@@ -41,7 +41,7 @@ Please use "Manual Solve" before attempting to show the escape path by pressing 
 ------------- SOLVE MAZE -------------
 1) Solve Manually
 2) Show Escape Route
-3) Show Escape Route (Enhanced)
+3) Show Escape Route (Enhanced - Shortest Path)
 4) Back
 
 Enter Menu item to continue: 
@@ -94,7 +94,7 @@ Enter Menu item to continue:
 ------------- SOLVE MAZE -------------
 1) Solve Manually
 2) Show Escape Route
-3) Show Escape Route (Enhanced)
+3) Show Escape Route (Enhanced - Shortest Path)
 4) Back
 
 Enter Menu item to continue: 
@@ -103,7 +103,7 @@ Please build the maze first before teleporting, doing so by pressing "2" on the 
 ------------- SOLVE MAZE -------------
 1) Solve Manually
 2) Show Escape Route
-3) Show Escape Route (Enhanced)
+3) Show Escape Route (Enhanced - Shortest Path)
 4) Back
 
 Enter Menu item to continue: 
@@ -139,7 +139,7 @@ Enter Menu item to continue:
 ------------- SOLVE MAZE -------------
 1) Solve Manually
 2) Show Escape Route
-3) Show Escape Route (Enhanced)
+3) Show Escape Route (Enhanced - Shortest Path)
 4) Back
 
 Enter Menu item to continue: 
@@ -148,7 +148,7 @@ Teleported to: 4859 71 4380
 ------------- SOLVE MAZE -------------
 1) Solve Manually
 2) Show Escape Route
-3) Show Escape Route (Enhanced)
+3) Show Escape Route (Enhanced - Shortest Path)
 4) Back
 
 Enter Menu item to continue: 
@@ -176,7 +176,7 @@ Step[20]: (4849, 71, 4370)
 ------------- SOLVE MAZE -------------
 1) Solve Manually
 2) Show Escape Route
-3) Show Escape Route (Enhanced)
+3) Show Escape Route (Enhanced - Shortest Path)
 4) Back
 
 Enter Menu item to continue: 
