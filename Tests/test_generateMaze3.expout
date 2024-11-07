@@ -14,25 +14,27 @@ Enter Menu item to continue:
 ------------- GENERATE MAZE -------------
 1) Read Maze from terminal
 2) Generate Random Maze
-3) Back
+3) Read Maze from terminal and validate it to be a perfect maze
+4) Back
 
 Enter Menu item to continue: 
-Enter the basePoint of maze: 
-Enter the length and width of maze: 
-Enter the maze structure: 
-Maze read successfully
+In Minecraft navigate to where you want the maze to be in Minecraft and type - done:
+Enter the length and width of maze
+Enter the maze structure (only 'X' and '.'): 
+Please enter exactly 9 characters.
+Please enter only 'X' and '.' for the maze structure.
+Maze read successfully.
 **Printing Maze**
-BasePoint: (4848, 71, 4369)
-Structure:
-x.xxx
-x.x.x
-x.x.x
-x.x.x
-x.x.x
-x...x
-xxxxx
+Base Point: (4846,63,4369)
+Structure: 
+XXXXXXXXX
+X........
+XXX.XXXXX
+X.X..X.XX
+X.X..X.XX
+X......XX
+XXXXXXXXX
 **End Printing Maze**
-
 
 ------------- MAIN MENU -------------
 1) Generate Maze
@@ -44,4 +46,3 @@ xxxxx
 Enter Menu item to continue: 
 
 The End!
-
