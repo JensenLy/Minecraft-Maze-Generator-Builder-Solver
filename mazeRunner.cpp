@@ -37,11 +37,11 @@ int main(int argc, char* argv[]){
 
     States curState = ST_Main;
     std::string userInput;
-    // maze* =nullptr
     Maze *m = new Maze();
     bool correctInput = false;
     GenerateMaze userMaze;
-    //Maze
+    bool isBuilt = false; 
+    bool isTeleported = false; 
 
     //State machine for menu        
     while (curState != ST_Exit)
@@ -155,6 +155,7 @@ int main(int argc, char* argv[]){
                     std::cout << "Built Maze" << std::endl;
                     curState = ST_Main;
 
+                    isBuilt = true;
                 }
                 else {
                     std::cout << "Generate maze first. Type 1 to Generate Maze" << std::endl;
@@ -173,6 +174,7 @@ int main(int argc, char* argv[]){
                     std::cout << "Built Maze" << std::endl;
                     curState = ST_Main;
 
+                    isBuilt = true;
                 }
                 else {
                     std::cout << "Generate maze first. Type 1 to Generate Maze" << std::endl;
@@ -193,27 +195,53 @@ int main(int argc, char* argv[]){
 
             if (mode) { // Test mode
                 if(userInput == "1") {
-                    Agent* solve = new Agent();  
-                    
-                    solve->manualSolveTest(userMaze.getCord(),\
-                    userMaze.getMazeHeight(), userMaze.getMazeWidth(), \
-                    userMaze.getMaze()); 
+                    if (isBuilt){
+                        Agent solve;  
+                        
+                        solve.manualSolveTest(userMaze.getCord(),\
+                        userMaze.getMazeHeight(), userMaze.getMazeWidth(), \
+                        userMaze.getMaze()); 
 
-                    delete solve;
+                        isTeleported = true; 
+                    }
+                    else { 
+                        std::cout << "Please build the maze first before ";
+                        std::cout << "teleporting, doing so by pressing \"2\" ";
+                        std::cout << "on the main menu" << std::endl; 
+                    }
+                    
                 }
                 else if(userInput == "2"){
-                    Agent* solve = new Agent(); 
-                    solve->initialiseSolveTest();
-                    solve->rightHandSolve(); 
-                    delete solve; 
+                    if (isTeleported){ 
+                        Agent solve; 
+                        solve.initialiseSolveTest();
+                        solve.rightHandSolve();  
+                        isTeleported = false; 
+                    }
+                    else { 
+                        std::cout << "Please use \"Manual Solve\" before "; 
+                        std::cout << "attempting to show the escape path "; 
+                        std::cout << "by pressing \"1\" in \"Solve Maze\" menu";
+                        std::cout << std::endl; 
+                    }
+                    
+                }
+                else if(userInput == "3") {
+                    if (isTeleported){ 
+                        Agent solve; 
+                        solve.bfsSolve(); 
+
+                        isTeleported = false; 
+                    }
+                    else {
+                        std::cout << "Please use \"Manual Solve\" before "; 
+                        std::cout << "attempting to show the escape path "; 
+                        std::cout << "by pressing \"1\" in \"Solve Maze\" menu";
+                        std::cout << std::endl; 
+                    }
                 }
                 else if(userInput == "4"){
                     curState = ST_Main;
-                }
-                else if(userInput == "3") { // Placeholder for BFS Solving
-                    Agent* solve = new Agent(); 
-                    solve->bfsSolve(); 
-                    delete solve;
                 }
                 else{
                     std::cout << "Please select menu item with numbers 1 to 4"; 
@@ -221,27 +249,52 @@ int main(int argc, char* argv[]){
             }
             else { // Normal mode
                 if(userInput == "1"){ 
-                    Agent* solve = new Agent(); 
-                    
-                    solve->manualSolve(userMaze.getCord(), \
-                    userMaze.getMazeHeight(), userMaze.getMazeWidth(), \
-                    userMaze.getMaze()); 
+                    if (isBuilt){
+                        Agent solve;  
+                        
+                        solve.manualSolve(userMaze.getCord(),\
+                        userMaze.getMazeHeight(), userMaze.getMazeWidth(), \
+                        userMaze.getMaze()); 
 
-                    delete solve; 
+                        isTeleported = true; 
+                    }
+                    else { 
+                        std::cout << "Please build the maze first before ";
+                        std::cout << "teleporting, doing so by pressing \"2\" ";
+                        std::cout << "on the main menu" << std::endl; 
+                    }
                 }
                 else if(userInput == "2"){
-                    Agent* solve = new Agent(); 
-                    solve->initialiseSolve(); 
-                    solve->rightHandSolve(); 
-                    delete solve; 
+                    if (isTeleported){ 
+                        Agent solve; 
+                        solve.initialiseSolve();
+                        solve.rightHandSolve(); 
+
+                        isTeleported = false; 
+                    }
+                    else { 
+                        std::cout << "Please use \"Manual Solve\" before "; 
+                        std::cout << "attempting to show the escape path "; 
+                        std::cout << "by pressing \"1\" in \"Solve Maze\" menu";
+                        std::cout << std::endl; 
+                    }
+                }
+                else if(userInput == "3") {
+                    if (isTeleported){ 
+                        Agent solve; 
+                        solve.bfsSolve(); 
+
+                        isTeleported = false; 
+                    }
+                    else {
+                        std::cout << "Please use \"Manual Solve\" before "; 
+                        std::cout << "attempting to show the escape path "; 
+                        std::cout << "by pressing \"1\" in \"Solve Maze\" menu";
+                        std::cout << std::endl; 
+                    }
                 }
                 else if(userInput == "4"){
                     curState = ST_Main;
-                }
-                else if(userInput == "3") { // Placeholder for BFS Solving
-                    Agent* solve = new Agent(); 
-                    solve->bfsSolve(); 
-                    delete solve;
                 }
                 else{
                     std::cout << "Please select menu item with numbers 1 to 3"; 
