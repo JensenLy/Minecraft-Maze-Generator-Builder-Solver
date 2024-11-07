@@ -1,3 +1,4 @@
+
 Welcome to MineCraft MazeRunner!
 --------------------------------
 
@@ -19,15 +20,19 @@ Enter Menu item to continue:
 Enter Menu item to continue: 
 In Minecraft navigate to where you want the maze to be in Minecraft and type - done:
 Enter the length and width of maze
+Enter the maze structure (only 'X' and '.'): 
+Please enter exactly 9 characters.
+Please enter only 'X' and '.' for the maze structure.
+Maze read successfully.
 **Printing Maze**
-Base Point: (4848,71,4369)
+Base Point: (4846,63,4369)
 Structure: 
 XXXXXXXXX
-........X
-XXXXXXX.X
-X.X...X.X
-X.X.X.X.X
-X...X...X
+X........
+XXX.XXXXX
+X.X..X.XX
+X.X..X.XX
+X......XX
 XXXXXXXXX
 **End Printing Maze**
 
