@@ -177,10 +177,8 @@ void Agent::manualSolve\
 
             // Set the coord for teleporting.
             // The results = current coord of the player + the point relative 
-            // to (0,0) in the structure of the maze. 
-            // getHeight also for uneven surfaces shenanigans 
+            // to (0,0) in the structure of the maze.  
             currPos = playerOrg + mcpp::Coordinate(rowRand, 0 , colRand);
-            currPos.y = mc.getHeight(currPos.x, currPos.z);
 
             mc.setPlayerTilePosition(currPos); 
         }
@@ -402,8 +400,8 @@ void Agent::rightHandSolve() {
             mc.postToChat("Congratulations! You reached the exit!"); 
         }
         
-        // half a second delay. 
-        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        // 200 miliseconds delay. 
+        std::this_thread::sleep_for(std::chrono::milliseconds(200));
     }
 } 
 
@@ -524,6 +522,7 @@ void Agent::bfsSolve(){
         path.push_back(currPos);
     }
 
+    // there's duplicate in the "path" vector so I removed them. 
     vecRemoveDups(path); 
     mc.postToChat("FOLLOW the lime carpet");
 
