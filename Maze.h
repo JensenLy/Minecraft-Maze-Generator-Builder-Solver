@@ -17,14 +17,14 @@ public:
                                         unsigned int zlen,
                                         bool mode, char** sourceMaze);
     ~Maze();
-    // Maze(char**&maze);
-    void exitCleanUp();
-    void terraformTerrain();
-    void storeTerrain();
-    void buildMaze();
     void scanTerrain();
-    void buildMazeEnhancement();
+    void storeTerrain();
+    void terraformTerrain();
+    void buildMaze();
+    void exitCleanUp();
+    
     void scanTerrainEnhancement();
+    void buildMazeEnhancement();
     void exitCleanUpEnhancement();
 
 private:

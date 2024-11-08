@@ -3,7 +3,7 @@
 
 Member 1 - Talin Russo-Christoffelsz (s4106649)
 
-    Base Program: Maze Generation
+    Base Program: Maze Generation, GenerateMaze
 
         Read Maze from terminal:
             During my implementation of read maze from terminal I made an effort
@@ -69,3 +69,25 @@ Member 2 - Kien Hung Ly (s3977367)
     Enhancement: E2 (Shortest Path - Breadth First Search)
         **TO DO: complete E2 description**
 
+Member 3 - Nathan Yong (s4090456)
+
+    Base Program - Maze, LinkedListCoordinate, Node
+
+        I created validation for building maze by first having a maze generated
+        as you cannot build a maze without a generated one first to base of the
+        build. I used a linked list as my data structure as it provides many 
+        advantages such as dynamic size, efficient insertion and allowing to store
+        two objects in one node. Therefore, makes the code more efficient and saves
+        memory space as for arrays they will need two separate arrays to store 
+        coordinate and blocktype. My program also only stores non-air blocks and thus
+        saves more memory as it is not creating a 3D data structure to store every 
+        block. 
+
+        Enhancement: E1 Create a Maze Without Flattening the Terrain
+        Before generating the maze i used ScanTerrainEnhancemnt()
+        which checks blocks that have a a height of greater than 1
+        block as a '\' which treats the it as an obstacle and uses
+        it as part of the wall structure. Used the back tracking 
+        algorithm to generate the maze based on the obstacles and
+        builds around them. Then builds the maze like the base 
+        program and restores it back to how it was before. 
