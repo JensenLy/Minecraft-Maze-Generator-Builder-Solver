@@ -33,7 +33,7 @@ Member 1 - Talin Russo-Christoffelsz (s4106649)
         could alter what the isValid function checked for. This reduced my need
         for creating new functions that did this. 
 
-Member 2 - Kien Hung Ly (s3977367)
+Member 2 - Kien Hung Ly (s3977367) (JensenLy on GitHub)
 
     Base Program: Agent
 
@@ -49,7 +49,7 @@ Member 2 - Kien Hung Ly (s3977367)
             built, it instead prints "Please build the maze first before 
             teleporting, doing so by pressing "2" on the main menu". 
 
-        Wall Follower Solving (Right Hand):
+        Wall Follower Solving (rightHandSolve()):
             In the wall follower solving, I use an integer named "orientation"
             to indicate where the player is facing (the front, not right hand).
             For each step, I check the current position's (currPos) right, 
@@ -67,6 +67,31 @@ Member 2 - Kien Hung Ly (s3977367)
             pressing "1" in "Solve Maze" menu"
 
 
-    Enhancement: E2 (Shortest Path - Breadth First Search)
-        **TO DO: complete E2 description**
+    Enhancement: E2 (Shortest Path - Breadth First Search) (bfsSolve())
+        This enhancement is done by using Breadth First Search algorithm. This 
+        algorithm will add the current position into a "visited" vector and add 
+        every possible steps into a "queue" vector from the current position. 
+        Then it will try to step on all of the postions in "queue" vector that 
+        is not in "visited" vector, repeat until it reaches the blue carpet.
+
+        For tracing the path, I found out that it's the same thing as doing the
+        BFS, but this time it goes from the exit and ends at the player's 
+        original position (when I started the BFS) while only allowed to step
+        on the positions that is in "visited" vector. Every step during the 
+        tracing path part will be stored into a "path" vector. There will be 
+        some duplicates in the "path" vector but they are removed by using: 
+        vec.erase(std::unique(vec.begin(), vec.end()),vec.end());. Once I have 
+        the "path" vector, I use it to set up a lime carpet trails similar to
+        the one in rightHandSolve(). 
+
+        When you run the BFS, you will notice the white carpets spawning, those
+        are intended and will disappear when the solving is done. This is a 
+        design choice to show to the player that the algorithm is working and 
+        the agent is not freezing. Because BFS takes times, especially on larger
+        mazes. 
+        
+        **Shout out to this video (https://www.youtube.com/watch?v=KiCBXu4P-2Y)
+        for helping me figuring out the algorithm, especially the example from
+        7:51 to 9:12 (I rewatched that part hundreds times :> ).**
+        
 
