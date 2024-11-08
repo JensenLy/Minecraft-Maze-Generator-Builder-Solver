@@ -1,5 +1,6 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/Jwdk2u8p)
-# cosc2804-assignment3-template
+Video:
+
+https://rmiteduau-my.sharepoint.com/:v:/g/personal/s4106649_student_rmit_edu_au/EeTJxcRatcxJn-1Ny-GKkQoBOizTaK26bV_XeCGlvq_Y5Q?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=RciGG3
 
 Member 1 - Talin Russo-Christoffelsz (s4106649)
 
