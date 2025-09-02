@@ -1,4 +1,4 @@
-<strong>Minecraft Maze Generator-Builder-Solver (C++)</strong>
+# <strong>Minecraft Maze Generator-Builder-Solver (C++)</strong>
 
 Demonstration Video:
 
