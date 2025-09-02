@@ -1,4 +1,6 @@
-Video:
+<strong>Minecraft Maze Generator-Builder-Solver (C++)</strong>
+
+Demonstration Video:
 
 https://rmiteduau-my.sharepoint.com/:v:/g/personal/s4106649_student_rmit_edu_au/EeTJxcRatcxJn-1Ny-GKkQoBOizTaK26bV_XeCGlvq_Y5Q?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=RciGG3
 
